@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books</title>
+</head>
+<body>
+<h1>Books</h1>
+<a th:href="@{/authors}">Go to Authors</a>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Publisher</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.getId()}">book.id</td>
+        <td th:text="${book.getTitle()}">book.title</td>
+        <td th:each="author : ${book.getAuthors()}" th:text="${author.getFirstName() + ' ' + author.getLastName()}">
+            book.author
+        </td>
+        <td th:text="${book.getPublisher() == null ? '' : book.getPublisher.getPublisherName()}">book.publisher</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
