@@ -15,3 +15,8 @@ The first project, which shows how to quickly make a Spring application with Spr
 It uses Spring MVC, Spring Data, Thymeleaf and an H2 (in-memory) database to build a very simple webapp based on books, authors and publishers.
 
 It uses the embedded Tomcat container and runs on localhost:8080. The pages are accessible at context paths: `/books` and `/authors`.
+
+
+### spring-core
+
+Learning about the Spring Framework core, such as dependency injection.
