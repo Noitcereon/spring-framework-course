@@ -1,0 +1,24 @@
+package me.noitcereon.practice.spring.core.services.i18n;
+
+import me.noitcereon.practice.spring.core.services.GreetingService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest
+@ActiveProfiles("EN")
+class GreetingServiceEnglishTest {
+
+    @Qualifier("i18nService") // This qualifier combined with the active profile makes the Spring DI inject the GreetingServiceDanish service.
+    @Autowired
+    GreetingService greetingService;
+
+    @Test
+    void sayHello() {
+        greetingService.sayHello("Hello");
+    }
+}
