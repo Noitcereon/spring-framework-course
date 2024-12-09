@@ -19,4 +19,11 @@ It uses the embedded Tomcat container and runs on localhost:8080. The pages are 
 
 ### spring-core
 
-Learning about the Spring Framework core, such as dependency injection.
+Learning about the Spring Framework core, such as dependency injection, Spring Profiles and Spring unit testing.
+
+### spring-6-rest-mvc
+
+Showcases Lombok and how to make a REST api with Spring MVC.
+
+> Regarding Lombok see the file [Beer.java](spring-6-rest-mvc/src/main/java/me/noitcereon/practice/spring6restmvc/models/Beer.java).
+> It contains examples usage + comments on how to optimally use Lombok with IntelliJ and how to "De-lombok".
