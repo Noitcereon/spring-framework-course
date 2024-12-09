@@ -15,6 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("EN")
 class GreetingServiceEnglishTest {
 
+    @MockitoBean
+    DataSourceService mock; // just here to prevent error from not having DataSourceService in Spring DI in EN profile.
+
     @Qualifier("i18nService") // This qualifier combined with the active profile makes the Spring DI inject the GreetingServiceDanish service.
     @Autowired
     GreetingService greetingService;
