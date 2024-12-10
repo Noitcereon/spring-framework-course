@@ -1,0 +1,6 @@
+PUT localhost:8080/api/v1/customer/9e1551cc-ddf9-46b9-9a01-33ba2efb9172
+Content-Type: application/json
+
+{
+  "customerName": "Noitcereon the Tester"
+}

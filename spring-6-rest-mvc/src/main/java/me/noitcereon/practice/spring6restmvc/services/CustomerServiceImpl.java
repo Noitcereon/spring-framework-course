@@ -1,5 +1,6 @@
 package me.noitcereon.practice.spring6restmvc.services;
 
+import lombok.extern.slf4j.Slf4j;
 import me.noitcereon.practice.spring6restmvc.models.Customer;
 import org.springframework.stereotype.Service;
 
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@Slf4j
 public class CustomerServiceImpl implements CustomerService {
 
     private final Map<UUID, Customer> customers = new HashMap<>();
@@ -61,5 +63,17 @@ public class CustomerServiceImpl implements CustomerService {
                 .build();
         customers.put(savedCustomer.getId(), savedCustomer);
         return savedCustomer;
+    }
+
+    @Override
+    public Optional<Customer> updateCustomerById(UUID customerId, Customer updatedCustomer) {
+        Customer customerToBeUpdated = customers.get(customerId);
+        if(customerToBeUpdated == null){
+            log.warn("Could not find customer with id '" + customerId + "'");
+            return Optional.empty();
+        }
+        customerToBeUpdated.setCustomerName(updatedCustomer.getCustomerName());
+        customerToBeUpdated.setLastModifiedDate(LocalDateTime.now());
+        return Optional.of(customerToBeUpdated);
     }
 }

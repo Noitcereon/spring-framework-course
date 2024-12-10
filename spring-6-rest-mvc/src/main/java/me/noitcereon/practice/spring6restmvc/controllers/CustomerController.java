@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -35,5 +36,11 @@ public class CustomerController {
         return ResponseEntity
                 .created(URI.create("/api/v1/customer/" + newCustomer.getId()))
                 .build();
+    }
+    @PutMapping("{customerId}")
+    public ResponseEntity<Customer> updateCustomerById(@PathVariable UUID customerId, @RequestBody Customer updatedCustomer){
+        Optional<Customer> savedCustomer = customerService.updateCustomerById(customerId, updatedCustomer);
+        if(savedCustomer.isEmpty()) return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(savedCustomer.get());
     }
 }
