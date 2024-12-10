@@ -1,0 +1,10 @@
+PATCH http://localhost:8080/api/v1/customer/b86a09a9-aa23-411f-8de2-cb78d803b8cb
+Content-Type: application/json
+
+{
+  "customerName": "Noitcereon the Patcher",
+  "version" : 2
+}
+
+### Version should not be updated, as it is not done in current version of the patch method.
+

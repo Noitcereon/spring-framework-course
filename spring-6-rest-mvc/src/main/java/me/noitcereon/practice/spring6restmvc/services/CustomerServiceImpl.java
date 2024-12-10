@@ -3,6 +3,7 @@ package me.noitcereon.practice.spring6restmvc.services;
 import lombok.extern.slf4j.Slf4j;
 import me.noitcereon.practice.spring6restmvc.models.Customer;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -81,5 +82,21 @@ public class CustomerServiceImpl implements CustomerService {
     public Optional<Customer> deleteCustomerId(UUID id) {
         Customer existingCustomer = customerMap.remove(id);
         return Optional.ofNullable(existingCustomer);
+    }
+
+    @Override
+    public Optional<Customer> patchCustomerById(UUID customerId, Customer updatedCustomer) {
+        Customer existingCustomer = customerMap.get(customerId);
+        if(existingCustomer == null) return Optional.empty();
+        boolean wasUpdated = false;
+
+        if(StringUtils.hasText(updatedCustomer.getCustomerName())){
+            existingCustomer.setCustomerName(updatedCustomer.getCustomerName());
+            wasUpdated = true;
+        }
+        if(wasUpdated){
+            existingCustomer.setLastModifiedDate(LocalDateTime.now());
+        }
+        return Optional.of(existingCustomer);
     }
 }
