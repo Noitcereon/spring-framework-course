@@ -4,11 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.noitcereon.practice.spring6restmvc.models.Beer;
 import me.noitcereon.practice.spring6restmvc.services.BeerService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,5 +27,12 @@ public class BeerController {
     public Beer getBeerById(@PathVariable UUID beerId){
         log.info("Retrieving beer by id " + beerId);
         return beerService.getBeerById(beerId);
+    }
+    @PostMapping
+    public ResponseEntity<Beer> createBeer(@RequestBody Beer beer) {
+        Beer savedBeer = beerService.saveNewBeer(beer);
+        return ResponseEntity
+                .created(URI.create("/api/v1/beer/" + savedBeer.getId()))
+                .build();
     }
 }
