@@ -1,5 +1,6 @@
 package me.noitcereon.practice.spring6restmvc.services;
 
+import lombok.extern.slf4j.Slf4j;
 import me.noitcereon.practice.spring6restmvc.models.Beer;
 import me.noitcereon.practice.spring6restmvc.models.BeerStyle;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@Slf4j
 public class BeerServiceImpl implements BeerService {
 
     private final Map<UUID, Beer> beerMap;
@@ -83,5 +85,24 @@ public class BeerServiceImpl implements BeerService {
 
         beerMap.put(newBeer.getId(), newBeer);
         return newBeer;
+    }
+
+    @Override
+    public Beer updateBeerById(UUID beerId, Beer updatedBeer) {
+        Beer beerToBeUpdated = beerMap.get(beerId);
+        if(beerToBeUpdated == null){
+            log.warn("Could not find beer with id '" + beerId + "' creating a new beer with that id.");
+            beerToBeUpdated = Beer.builder().build();
+            beerToBeUpdated.setCreatedDate(LocalDateTime.now());
+        }
+        beerToBeUpdated.setId(beerId);
+        beerToBeUpdated.setVersion(updatedBeer.getVersion());
+        beerToBeUpdated.setBeerName(updatedBeer.getBeerName());
+        beerToBeUpdated.setBeerStyle(updatedBeer.getBeerStyle());
+        beerToBeUpdated.setQuantityOnHand(updatedBeer.getQuantityOnHand());
+        beerToBeUpdated.setPrice(updatedBeer.getPrice());
+        beerToBeUpdated.setUpc(updatedBeer.getUpc());
+        beerToBeUpdated.setUpdateDate(LocalDateTime.now());
+        return beerMap.put(beerToBeUpdated.getId(), beerToBeUpdated);
     }
 }

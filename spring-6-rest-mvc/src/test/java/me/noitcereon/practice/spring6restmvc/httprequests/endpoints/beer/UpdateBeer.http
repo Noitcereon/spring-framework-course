@@ -1,0 +1,11 @@
+PUT localhost:8080/api/v1/beer/72a0c016-315a-434f-aae6-3b348ea58f9c
+Content-Type: application/json
+
+{
+  "version": 1,
+  "beerName": "Updated Beer",
+  "beerStyle": "PALE_ALE",
+  "upc": "65431",
+  "quantityOnHand": 100,
+  "price": 12.99
+}

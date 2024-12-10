@@ -35,4 +35,9 @@ public class BeerController {
                 .created(URI.create("/api/v1/beer/" + savedBeer.getId()))
                 .build();
     }
+    @PutMapping("/{beerId}")
+    public ResponseEntity<Beer> updateBeerById(@PathVariable UUID beerId, @RequestBody Beer updatedBeer){
+        Beer savedBeer = beerService.updateBeerById(beerId, updatedBeer);
+        return ResponseEntity.ok().body(savedBeer);
+    }
 }
