@@ -1,6 +1,5 @@
 package me.noitcereon.practice.spring6restmvc.services;
 
-import lombok.RequiredArgsConstructor;
 import me.noitcereon.practice.spring6restmvc.models.Customer;
 import org.springframework.stereotype.Service;
 
@@ -48,5 +47,19 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer getCustomerById(UUID id) {
         return customers.get(id);
+    }
+
+    @Override
+    public Customer createCustomer(Customer newCustomer) {
+        LocalDateTime now = LocalDateTime.now();
+        Customer savedCustomer = Customer.builder()
+                .id(UUID.randomUUID())
+                .version(newCustomer.getVersion())
+                .customerName(newCustomer.getCustomerName())
+                .createdDate(now)
+                .lastModifiedDate(now)
+                .build();
+        customers.put(savedCustomer.getId(), savedCustomer);
+        return savedCustomer;
     }
 }

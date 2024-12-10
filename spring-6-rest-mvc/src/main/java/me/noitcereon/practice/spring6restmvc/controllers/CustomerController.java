@@ -4,11 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.noitcereon.practice.spring6restmvc.models.Customer;
 import me.noitcereon.practice.spring6restmvc.services.CustomerService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,5 +28,12 @@ public class CustomerController {
     public Customer getCustomerById(@PathVariable UUID customerId) {
         log.info("Get customer by id called with id: {}", customerId);
         return customerService.getCustomerById(customerId);
+    }
+    @PostMapping
+    public ResponseEntity createCustomer(@RequestBody Customer customer){
+        Customer newCustomer = customerService.createCustomer(customer);
+        return ResponseEntity
+                .created(URI.create("/api/v1/customer/" + newCustomer.getId()))
+                .build();
     }
 }
