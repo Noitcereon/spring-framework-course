@@ -111,4 +111,26 @@ public class BeerServiceImpl implements BeerService {
         Beer beer = beerMap.remove(id);
         return Optional.ofNullable(beer);
     }
+
+    @Override
+    public Optional<Beer> patchBeerById(UUID beerId, Beer updatedBeer) {
+        Beer existingBeer = beerMap.get(beerId);
+        if(existingBeer == null) return Optional.empty();
+        boolean wasUpdated = false;
+        if(updatedBeer.getBeerName() != null){
+            existingBeer.setBeerName(updatedBeer.getBeerName());
+            wasUpdated = true;
+        }
+        if(updatedBeer.getPrice() != null){
+            existingBeer.setPrice(updatedBeer.getPrice());
+            wasUpdated = true;
+        }
+
+        // I could do the same checks for the remaining beer properties, but I won't because it is not needed for learning...
+
+        if(wasUpdated){
+            existingBeer.setUpdateDate(LocalDateTime.now());
+        }
+        return Optional.of(existingBeer);
+    }
 }

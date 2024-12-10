@@ -47,4 +47,10 @@ public class BeerController {
         if(deletedBeer.isEmpty()) return ResponseEntity.notFound().build();
         return ResponseEntity.noContent().build();
     }
+    @PatchMapping("/{beerId}")
+    public ResponseEntity<Beer> patchBeerById(@PathVariable("beerId") UUID beerId, @RequestBody Beer updatedBeer){
+        Optional<Beer> savedBeer = beerService.patchBeerById(beerId, updatedBeer);
+        if(savedBeer.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body(savedBeer.get());
+    }
 }

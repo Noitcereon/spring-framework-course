@@ -1,0 +1,10 @@
+PATCH http://localhost:8080/api/v1/beer/856477d4-ab9a-4d6f-a031-d44b8cb5c584
+Content-Type: application/json
+
+{
+  "beerName": "Patch Beer",
+  "price": 1.99,
+  "quantityOnHand": 200
+}
+
+### The quanityOnHand will not be updated (in the version at time of writing, because it has been left out).
