@@ -13,4 +13,6 @@ public interface CustomerService {
     Customer createCustomer(Customer newCustomer);
 
     Optional<Customer> updateCustomerById(UUID customerId, Customer updatedCustomer);
+
+    Optional<Customer> deleteCustomerId(UUID id);
 }

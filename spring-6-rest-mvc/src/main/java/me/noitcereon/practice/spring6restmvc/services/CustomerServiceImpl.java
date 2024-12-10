@@ -11,7 +11,7 @@ import java.util.*;
 @Slf4j
 public class CustomerServiceImpl implements CustomerService {
 
-    private final Map<UUID, Customer> customers = new HashMap<>();
+    private final Map<UUID, Customer> customerMap;
 
     public CustomerServiceImpl() {
         Customer customer1 = Customer.builder()
@@ -35,20 +35,20 @@ public class CustomerServiceImpl implements CustomerService {
                 .createdDate(LocalDateTime.now())
                 .lastModifiedDate(LocalDateTime.now())
                 .build();
-
-        customers.put(customer1.getId(), customer1);
-        customers.put(customer2.getId(), customer2);
-        customers.put(customer3.getId(), customer3);
+        customerMap = new HashMap<>();
+        customerMap.put(customer1.getId(), customer1);
+        customerMap.put(customer2.getId(), customer2);
+        customerMap.put(customer3.getId(), customer3);
     }
 
     @Override
     public List<Customer> listCustomers() {
-        return new ArrayList<>(customers.values());
+        return new ArrayList<>(customerMap.values());
     }
 
     @Override
     public Customer getCustomerById(UUID id) {
-        return customers.get(id);
+        return customerMap.get(id);
     }
 
     @Override
@@ -61,13 +61,13 @@ public class CustomerServiceImpl implements CustomerService {
                 .createdDate(now)
                 .lastModifiedDate(now)
                 .build();
-        customers.put(savedCustomer.getId(), savedCustomer);
+        customerMap.put(savedCustomer.getId(), savedCustomer);
         return savedCustomer;
     }
 
     @Override
     public Optional<Customer> updateCustomerById(UUID customerId, Customer updatedCustomer) {
-        Customer customerToBeUpdated = customers.get(customerId);
+        Customer customerToBeUpdated = customerMap.get(customerId);
         if(customerToBeUpdated == null){
             log.warn("Could not find customer with id '" + customerId + "'");
             return Optional.empty();
@@ -75,5 +75,11 @@ public class CustomerServiceImpl implements CustomerService {
         customerToBeUpdated.setCustomerName(updatedCustomer.getCustomerName());
         customerToBeUpdated.setLastModifiedDate(LocalDateTime.now());
         return Optional.of(customerToBeUpdated);
+    }
+
+    @Override
+    public Optional<Customer> deleteCustomerId(UUID id) {
+        Customer existingCustomer = customerMap.remove(id);
+        return Optional.ofNullable(existingCustomer);
     }
 }

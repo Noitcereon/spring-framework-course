@@ -2,6 +2,7 @@ package me.noitcereon.practice.spring6restmvc.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.noitcereon.practice.spring6restmvc.models.Beer;
 import me.noitcereon.practice.spring6restmvc.models.Customer;
 import me.noitcereon.practice.spring6restmvc.services.CustomerService;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +43,11 @@ public class CustomerController {
         Optional<Customer> savedCustomer = customerService.updateCustomerById(customerId, updatedCustomer);
         if(savedCustomer.isEmpty()) return ResponseEntity.noContent().build();
         return ResponseEntity.ok().body(savedCustomer.get());
+    }
+    @DeleteMapping("/{customerId}")
+    public ResponseEntity deleteBeerById(@PathVariable("customerId") UUID id){
+        Optional<Customer> deletedCustomer = customerService.deleteCustomerId(id);
+        if(deletedCustomer.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.noContent().build();
     }
 }
