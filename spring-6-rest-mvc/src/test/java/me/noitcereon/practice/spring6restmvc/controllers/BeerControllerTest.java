@@ -16,10 +16,9 @@ class BeerControllerTest {
     BeerController controller;
 
     @Test
-    void givenAnId_WhenFetchingBeerById_ThenReturnGalaxyCat2Beer() {
-        String expectedBeerName = "Galaxy Cat 2";
+    void basicTestOfGetBeerById() {
         Beer actual = controller.getBeerById(UUID.randomUUID());
 
-        assertEquals(expectedBeerName, actual.getBeerName());
+        assertNull(actual); // id should not exist.
     }
 }
