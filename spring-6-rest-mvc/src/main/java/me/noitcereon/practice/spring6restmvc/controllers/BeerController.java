@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -39,5 +40,11 @@ public class BeerController {
     public ResponseEntity<Beer> updateBeerById(@PathVariable UUID beerId, @RequestBody Beer updatedBeer){
         Beer savedBeer = beerService.updateBeerById(beerId, updatedBeer);
         return ResponseEntity.ok().body(savedBeer);
+    }
+    @DeleteMapping("/{beerId}")
+    public ResponseEntity deleteBeerById(@PathVariable("beerId") UUID id){
+        Optional<Beer> deletedBeer = beerService.deleteBeerById(id);
+        if(deletedBeer.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.noContent().build();
     }
 }
