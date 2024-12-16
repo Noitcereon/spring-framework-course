@@ -1,7 +1,7 @@
 package me.noitcereon.practice.spring6restmvc.services;
 
-import lombok.extern.slf4j.Slf4j;
 import me.noitcereon.practice.spring6restmvc.models.Customer;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -9,9 +9,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-@Slf4j
 public class CustomerServiceImpl implements CustomerService {
 
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(CustomerServiceImpl.class);
     private final Map<UUID, Customer> customerMap;
 
     public CustomerServiceImpl() {
@@ -69,7 +69,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Optional<Customer> updateCustomerById(UUID customerId, Customer updatedCustomer) {
         Customer customerToBeUpdated = customerMap.get(customerId);
-        if(customerToBeUpdated == null){
+        if (customerToBeUpdated == null) {
             log.warn("Could not find customer with id '" + customerId + "'");
             return Optional.empty();
         }
@@ -87,14 +87,14 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Optional<Customer> patchCustomerById(UUID customerId, Customer updatedCustomer) {
         Customer existingCustomer = customerMap.get(customerId);
-        if(existingCustomer == null) return Optional.empty();
+        if (existingCustomer == null) return Optional.empty();
         boolean wasUpdated = false;
 
-        if(StringUtils.hasText(updatedCustomer.getCustomerName())){
+        if (StringUtils.hasText(updatedCustomer.getCustomerName())) {
             existingCustomer.setCustomerName(updatedCustomer.getCustomerName());
             wasUpdated = true;
         }
-        if(wasUpdated){
+        if (wasUpdated) {
             existingCustomer.setLastModifiedDate(LocalDateTime.now());
         }
         return Optional.of(existingCustomer);

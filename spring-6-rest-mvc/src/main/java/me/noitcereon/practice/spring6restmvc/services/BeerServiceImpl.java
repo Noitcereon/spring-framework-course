@@ -1,8 +1,8 @@
 package me.noitcereon.practice.spring6restmvc.services;
 
-import lombok.extern.slf4j.Slf4j;
 import me.noitcereon.practice.spring6restmvc.models.Beer;
 import me.noitcereon.practice.spring6restmvc.models.BeerStyle;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-@Slf4j
 public class BeerServiceImpl implements BeerService {
 
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(BeerServiceImpl.class);
     private final Map<UUID, Beer> beerMap;
 
     public BeerServiceImpl() {
@@ -61,9 +61,10 @@ public class BeerServiceImpl implements BeerService {
 
 
     @Override
-    public List<Beer> listBeers(){
+    public List<Beer> listBeers() {
         return new ArrayList<>(beerMap.values());
     }
+
     @Override
     public Beer getBeerById(UUID id) {
         return beerMap.get(id);
@@ -90,7 +91,7 @@ public class BeerServiceImpl implements BeerService {
     @Override
     public Beer updateBeerById(UUID beerId, Beer updatedBeer) {
         Beer beerToBeUpdated = beerMap.get(beerId);
-        if(beerToBeUpdated == null){
+        if (beerToBeUpdated == null) {
             log.warn("Could not find beer with id '" + beerId + "' creating a new beer with that id.");
             beerToBeUpdated = Beer.builder().build();
             beerToBeUpdated.setCreatedDate(LocalDateTime.now());
@@ -115,20 +116,20 @@ public class BeerServiceImpl implements BeerService {
     @Override
     public Optional<Beer> patchBeerById(UUID beerId, Beer updatedBeer) {
         Beer existingBeer = beerMap.get(beerId);
-        if(existingBeer == null) return Optional.empty();
+        if (existingBeer == null) return Optional.empty();
         boolean wasUpdated = false;
-        if(updatedBeer.getBeerName() != null){
+        if (updatedBeer.getBeerName() != null) {
             existingBeer.setBeerName(updatedBeer.getBeerName());
             wasUpdated = true;
         }
-        if(updatedBeer.getPrice() != null){
+        if (updatedBeer.getPrice() != null) {
             existingBeer.setPrice(updatedBeer.getPrice());
             wasUpdated = true;
         }
 
         // I could do the same checks for the remaining beer properties, but I won't because it is not needed for learning...
 
-        if(wasUpdated){
+        if (wasUpdated) {
             existingBeer.setUpdateDate(LocalDateTime.now());
         }
         return Optional.of(existingBeer);
