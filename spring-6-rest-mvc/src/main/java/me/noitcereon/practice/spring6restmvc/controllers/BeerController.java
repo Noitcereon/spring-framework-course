@@ -28,7 +28,7 @@ public class BeerController {
 
     @GetMapping("/{beerId}")
     public Beer getBeerById(@PathVariable UUID beerId) {
-        log.info("Retrieving beer by id " + beerId);
+        log.info("Retrieving beer by id {}", beerId);
         return beerService.getBeerById(beerId);
     }
 

@@ -70,7 +70,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Optional<Customer> updateCustomerById(UUID customerId, Customer updatedCustomer) {
         Customer customerToBeUpdated = customerMap.get(customerId);
         if (customerToBeUpdated == null) {
-            log.warn("Could not find customer with id '" + customerId + "'");
+            log.warn("Could not find customer with id '{}'", customerId);
             return Optional.empty();
         }
         customerToBeUpdated.setCustomerName(updatedCustomer.getCustomerName());

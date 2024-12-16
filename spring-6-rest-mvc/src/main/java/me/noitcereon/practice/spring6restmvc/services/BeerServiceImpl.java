@@ -92,7 +92,7 @@ public class BeerServiceImpl implements BeerService {
     public Beer updateBeerById(UUID beerId, Beer updatedBeer) {
         Beer beerToBeUpdated = beerMap.get(beerId);
         if (beerToBeUpdated == null) {
-            log.warn("Could not find beer with id '" + beerId + "' creating a new beer with that id.");
+            log.warn("Could not find beer with id '{}' creating a new beer with that id.", beerId);
             beerToBeUpdated = Beer.builder().build();
             beerToBeUpdated.setCreatedDate(LocalDateTime.now());
         }
