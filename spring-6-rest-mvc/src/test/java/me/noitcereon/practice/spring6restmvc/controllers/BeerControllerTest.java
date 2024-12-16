@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.hamcrest.Matchers.is;
 
 @WebMvcTest(BeerController.class) // A Spring "Test Slice" to minimize test setup. See also: https://docs.spring.io/spring-boot/appendix/test-auto-configuration/slices.html
 class BeerControllerTest {
@@ -26,15 +26,17 @@ class BeerControllerTest {
     BeerService mockBeerService;
 
     @Test
-    void fetchingBeerByIdShouldReturnOkResponse() throws Exception{
-        Beer testBeer = Beer.builder().beerName("Test Beer").build();
-        String endpoint = "/api/v1/beer/" + UUID.randomUUID();
-        BDDMockito.given(mockBeerService.getBeerById(any(UUID.class)))
+    void fetchingBeerByIdShouldReturnOkResponseWithBeerJson() throws Exception {
+        Beer testBeer = Beer.builder().beerName("Test Beer").id(UUID.randomUUID()).build();
+        String endpoint = "/api/v1/beer/" + testBeer.getId();
+        BDDMockito.given(mockBeerService.getBeerById(testBeer.getId()))
                 .willReturn(testBeer);
 
         mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.beerName", is(testBeer.getBeerName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", is(testBeer.getId().toString())));
     }
 }
