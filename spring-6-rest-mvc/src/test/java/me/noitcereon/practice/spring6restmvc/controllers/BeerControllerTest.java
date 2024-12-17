@@ -13,6 +13,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.is;
@@ -25,6 +27,28 @@ class BeerControllerTest {
 
     @MockitoBean
     BeerService mockBeerService;
+
+    @Test
+    void givenBeerService_whenFetchingBeerList_thenReturnOkResponseWithBeersInJson() throws Exception {
+        // Arrange
+        List<Beer> testBeers = new ArrayList<>();
+        testBeers.add(Beer.builder().beerName("Test Beer").id(UUID.randomUUID()).build());
+        testBeers.add(Beer.builder().beerName("Beer Test").id(UUID.randomUUID()).build());
+        String endpoint = "/api/v1/beer";
+        BDDMockito.given(mockBeerService.listBeers()).willReturn(testBeers);
+
+        // Act
+        ResultActions performResult = mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // Assert
+        performResult.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].beerName", is(testBeers.get(0).getBeerName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", is(testBeers.get(0).getId().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].beerName", is(testBeers.get(1).getBeerName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id", is(testBeers.get(1).getId().toString())));
+    }
 
     @Test
     void fetchingBeerByIdShouldReturnOkResponseWithBeerJson() throws Exception {
