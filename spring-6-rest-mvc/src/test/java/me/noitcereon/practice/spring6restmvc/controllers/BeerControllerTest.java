@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -27,14 +28,18 @@ class BeerControllerTest {
 
     @Test
     void fetchingBeerByIdShouldReturnOkResponseWithBeerJson() throws Exception {
+        // Arrange
         Beer testBeer = Beer.builder().beerName("Test Beer").id(UUID.randomUUID()).build();
         String endpoint = "/api/v1/beer/" + testBeer.getId();
         BDDMockito.given(mockBeerService.getBeerById(testBeer.getId()))
                 .willReturn(testBeer);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+        // Act
+        ResultActions performResult = mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // Assert
+        performResult.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.beerName", is(testBeer.getBeerName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", is(testBeer.getId().toString())));
