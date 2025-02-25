@@ -1,8 +1,14 @@
 package me.noitcereon.practice.spring6restmvc.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import me.noitcereon.practice.spring6restmvc.models.Beer;
 import me.noitcereon.practice.spring6restmvc.services.BeerService;
+import me.noitcereon.practice.spring6restmvc.services.BeerServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -27,6 +33,39 @@ class BeerControllerTest {
 
     @MockitoBean
     BeerService mockBeerService;
+
+    ObjectMapper objectMapper;
+
+    private BeerServiceImpl beerServiceImpl;
+
+    @BeforeEach
+    void setUp() {
+        beerServiceImpl = new BeerServiceImpl();
+
+        /*
+         * JavaTimeModule is a class that registers capability of serializing java.time objects with the Jackson core.
+         */
+        objectMapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
+    }
+
+    @Test
+    void givenBeerService_whenCallingCreateBeerEndpoint_thenCreatedResponseIsReturned() throws Exception {
+        Beer newBeer = beerServiceImpl.listBeers().get(0);
+        newBeer.setId(null);
+        newBeer.setVersion(null);
+
+        BDDMockito.given(mockBeerService.saveNewBeer(ArgumentMatchers.any(Beer.class)))
+                .willReturn(beerServiceImpl.listBeers().get(1));
+
+        String endpoint = BeerController.BASE_URL;
+        var performResult = mockMvc.perform(MockMvcRequestBuilders.post(endpoint)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(newBeer)));
+
+        performResult.andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.header().exists("Location"));
+    }
 
     @Test
     void givenBeerService_whenFetchingBeerList_thenReturnOkResponseWithBeersInJson() throws Exception {
