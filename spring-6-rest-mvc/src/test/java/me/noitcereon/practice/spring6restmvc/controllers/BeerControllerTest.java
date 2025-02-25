@@ -6,8 +6,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import me.noitcereon.practice.spring6restmvc.models.Beer;
 import me.noitcereon.practice.spring6restmvc.services.BeerService;
 import me.noitcereon.practice.spring6restmvc.services.BeerServiceImpl;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.is;
@@ -67,6 +70,7 @@ class BeerControllerTest {
         performResult.andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.header().exists("Location"));
     }
+
     @Test
     void testUpdateBeer() throws Exception {
         // Arrange
@@ -127,5 +131,29 @@ class BeerControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.beerName", is(testBeer.getBeerName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", is(testBeer.getId().toString())));
+    }
+
+    @Test
+    void testDeleteBeerById() throws Exception {
+        // Arrange
+        Beer simulatedExistingBeer = beerServiceImpl.listBeers().get(0);
+        String endpoint = BeerController.BASE_URL + "/" + simulatedExistingBeer.getId();
+        Optional<Beer> stubResponse = Optional.of(simulatedExistingBeer);
+        BDDMockito.given(mockBeerService.deleteBeerById(simulatedExistingBeer.getId()))
+                .willReturn(stubResponse);
+        ArgumentCaptor<UUID> argCaptor = ArgumentCaptor.forClass(UUID.class);
+
+        // Act
+        var performResult = mockMvc.perform(MockMvcRequestBuilders.delete(endpoint));
+
+        // Assert
+        /*
+         * Verifies the mock was called and captures the input given to the mocked call.
+         * in the argCaptor object.
+         */
+        BDDMockito.verify(mockBeerService).deleteBeerById(argCaptor.capture());
+        Assertions.assertEquals(simulatedExistingBeer.getId(), argCaptor.getValue());
+
+        performResult.andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 }
