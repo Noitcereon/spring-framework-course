@@ -1,8 +1,10 @@
 package me.noitcereon.practice.spring6restmvc.controllers;
 
+import me.noitcereon.practice.spring6restmvc.controllers.exception.NotFoundException;
 import me.noitcereon.practice.spring6restmvc.models.Customer;
 import me.noitcereon.practice.spring6restmvc.services.CustomerService;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -67,6 +69,18 @@ class CustomerControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(expectedCustomers.get(1).getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].customerName").value(expectedCustomers.get(1).getCustomerName()));
     }
+
+    @Test
+    void testControllerCanHandleNotFoundException() throws Exception {
+        BDDMockito.given(mockCustomerService.getCustomerById(BDDMockito.any()))
+                .willThrow(NotFoundException.class);
+
+        String endpoint = CustomerController.BASE_URL + "/" + UUID.randomUUID();
+        var result = mockMvc.perform(MockMvcRequestBuilders.get(endpoint));
+
+        result.andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
     // TODO: skipped assignment of testing create customer
     // TODO: skipped assignment of testing update customer
     // TODO: skipped assignment of testing delete customer
