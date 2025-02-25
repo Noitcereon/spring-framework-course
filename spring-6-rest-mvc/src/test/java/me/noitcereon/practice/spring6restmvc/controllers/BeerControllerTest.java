@@ -43,7 +43,8 @@ class BeerControllerTest {
         beerServiceImpl = new BeerServiceImpl();
 
         /*
-         * JavaTimeModule is a class that registers capability of serializing java.time objects with the Jackson core.
+         * JavaTimeModule is a class that registers capability of serializing java.time objects
+         * with the Jackson core.
          */
         objectMapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
     }
@@ -65,6 +66,26 @@ class BeerControllerTest {
 
         performResult.andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.header().exists("Location"));
+    }
+    @Test
+    void testUpdateBeer() throws Exception {
+        // Arrange
+        Beer beerToUpdate = beerServiceImpl.listBeers().get(0);
+
+        BDDMockito.given(mockBeerService.updateBeerById(ArgumentMatchers.any(UUID.class), ArgumentMatchers.any(Beer.class)))
+                .willReturn(beerToUpdate);
+        String endpoint = BeerController.BASE_URL + "/" + beerToUpdate.getId();
+
+        // Act
+        ResultActions performResult = mockMvc.perform(MockMvcRequestBuilders.put(endpoint)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(beerToUpdate)));
+
+        // Assert
+        performResult.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", is(beerToUpdate.getId().toString())));
     }
 
     @Test
