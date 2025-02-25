@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * {@link org.springframework.web.bind.annotation.ExceptionHandler} (annotated on methods) and <br>
  * {@link org.springframework.web.bind.annotation.ControllerAdvice} (targets Class and is global exception handling)
  */
-@ResponseStatus(HttpStatus.NOT_FOUND)
+@ResponseStatus(HttpStatus.NOT_FOUND) // if NotFoundException is thrown in a controller it will return notFound response.
 public class NotFoundException extends RuntimeException {
 
     public NotFoundException() {
