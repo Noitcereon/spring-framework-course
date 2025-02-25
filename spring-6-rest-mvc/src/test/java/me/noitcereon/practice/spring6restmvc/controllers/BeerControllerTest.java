@@ -3,6 +3,7 @@ package me.noitcereon.practice.spring6restmvc.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import me.noitcereon.practice.spring6restmvc.controllers.exception.NotFoundException;
 import me.noitcereon.practice.spring6restmvc.models.Beer;
 import me.noitcereon.practice.spring6restmvc.services.BeerService;
 import me.noitcereon.practice.spring6restmvc.services.BeerServiceImpl;
@@ -155,5 +156,16 @@ class BeerControllerTest {
         Assertions.assertEquals(simulatedExistingBeer.getId(), argCaptor.getValue());
 
         performResult.andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    void testFetchByIdNotFoundException() throws Exception {
+        BDDMockito.given(mockBeerService.getBeerById(BDDMockito.any(UUID.class)))
+                .willThrow(NotFoundException.class);
+
+        var result = mockMvc.perform(MockMvcRequestBuilders.get(
+                BeerController.BASE_URL + "/" + UUID.randomUUID()));
+
+        result.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }
