@@ -16,6 +16,7 @@ import java.util.UUID;
 public class BeerController {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(BeerController.class);
     private final BeerService beerService;
+    public static final String BASE_URL = "/api/v1/beer";
 
     public BeerController(BeerService beerService) {
         this.beerService = beerService;
