@@ -67,4 +67,8 @@ class CustomerControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(expectedCustomers.get(1).getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].customerName").value(expectedCustomers.get(1).getCustomerName()));
     }
+    // TODO: skipped assignment of testing create customer
+    // TODO: skipped assignment of testing update customer
+    // TODO: skipped assignment of testing delete customer
+    // TODO: skipped assignment of testing patch customer
 }
