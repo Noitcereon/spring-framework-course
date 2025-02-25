@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/customer")
+@RequestMapping(CustomerController.BASE_URL)
 public class CustomerController {
     public static final String BASE_URL = "/api/v1/customer";
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(CustomerController.class);
