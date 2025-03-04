@@ -1,6 +1,6 @@
 package me.noitcereon.practice.spring6restmvc.controllers;
 
-import me.noitcereon.practice.spring6restmvc.models.Beer;
+import me.noitcereon.practice.spring6restmvc.models.BeerDTO;
 import me.noitcereon.practice.spring6restmvc.services.BeerService;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
@@ -23,40 +23,40 @@ public class BeerController {
     }
 
     @GetMapping
-    public List<Beer> getBeerList() {
+    public List<BeerDTO> getBeerList() {
         return beerService.listBeers();
     }
 
     @GetMapping("/{beerId}")
-    public Beer getBeerById(@PathVariable UUID beerId) {
+    public BeerDTO getBeerById(@PathVariable UUID beerId) {
         log.info("Retrieving beer by id {}", beerId);
         return beerService.getBeerById(beerId);
     }
 
     @PostMapping
-    public ResponseEntity<Beer> createBeer(@RequestBody Beer beer) {
-        Beer savedBeer = beerService.saveNewBeer(beer);
+    public ResponseEntity<BeerDTO> createBeer(@RequestBody BeerDTO beerDTO) {
+        BeerDTO savedBeerDTO = beerService.saveNewBeer(beerDTO);
         return ResponseEntity
-                .created(URI.create("/api/v1/beer/" + savedBeer.getId()))
+                .created(URI.create("/api/v1/beer/" + savedBeerDTO.getId()))
                 .build();
     }
 
     @PutMapping("/{beerId}")
-    public ResponseEntity<Beer> updateBeerById(@PathVariable UUID beerId, @RequestBody Beer updatedBeer) {
-        Beer savedBeer = beerService.updateBeerById(beerId, updatedBeer);
-        return ResponseEntity.ok().body(savedBeer);
+    public ResponseEntity<BeerDTO> updateBeerById(@PathVariable UUID beerId, @RequestBody BeerDTO updatedBeerDTO) {
+        BeerDTO savedBeerDTO = beerService.updateBeerById(beerId, updatedBeerDTO);
+        return ResponseEntity.ok().body(savedBeerDTO);
     }
 
     @DeleteMapping("/{beerId}")
     public ResponseEntity deleteBeerById(@PathVariable("beerId") UUID id) {
-        Optional<Beer> deletedBeer = beerService.deleteBeerById(id);
+        Optional<BeerDTO> deletedBeer = beerService.deleteBeerById(id);
         if (deletedBeer.isEmpty()) return ResponseEntity.notFound().build();
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{beerId}")
-    public ResponseEntity<Beer> patchBeerById(@PathVariable("beerId") UUID beerId, @RequestBody Beer updatedBeer) {
-        Optional<Beer> savedBeer = beerService.patchBeerById(beerId, updatedBeer);
+    public ResponseEntity<BeerDTO> patchBeerById(@PathVariable("beerId") UUID beerId, @RequestBody BeerDTO updatedBeerDTO) {
+        Optional<BeerDTO> savedBeer = beerService.patchBeerById(beerId, updatedBeerDTO);
         if (savedBeer.isEmpty()) return ResponseEntity.notFound().build();
         return ResponseEntity.ok().body(savedBeer.get());
     }

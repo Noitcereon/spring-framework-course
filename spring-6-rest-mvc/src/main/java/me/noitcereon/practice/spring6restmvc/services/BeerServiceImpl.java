@@ -1,6 +1,6 @@
 package me.noitcereon.practice.spring6restmvc.services;
 
-import me.noitcereon.practice.spring6restmvc.models.Beer;
+import me.noitcereon.practice.spring6restmvc.models.BeerDTO;
 import me.noitcereon.practice.spring6restmvc.models.BeerStyle;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -13,12 +13,12 @@ import java.util.*;
 public class BeerServiceImpl implements BeerService {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(BeerServiceImpl.class);
-    private final Map<UUID, Beer> beerMap;
+    private final Map<UUID, BeerDTO> beerMap;
 
     public BeerServiceImpl() {
         this.beerMap = new HashMap<>();
 
-        Beer beer1 = Beer.builder()
+        BeerDTO beerDTO1 = BeerDTO.builder()
                 .id(UUID.fromString("856477d4-ab9a-4d6f-a031-d44b8cb5c584"))
                 .version(1)
                 .beerName("Galaxy Cat")
@@ -30,7 +30,7 @@ public class BeerServiceImpl implements BeerService {
                 .updateDate(LocalDateTime.now())
                 .build();
 
-        Beer beer2 = Beer.builder()
+        BeerDTO beerDTO2 = BeerDTO.builder()
                 .id(UUID.randomUUID())
                 .version(1)
                 .beerName("Crank")
@@ -42,7 +42,7 @@ public class BeerServiceImpl implements BeerService {
                 .updateDate(LocalDateTime.now())
                 .build();
 
-        Beer beer3 = Beer.builder()
+        BeerDTO beerDTO3 = BeerDTO.builder()
                 .id(UUID.randomUUID())
                 .version(1)
                 .beerName("Sunshine City")
@@ -54,84 +54,84 @@ public class BeerServiceImpl implements BeerService {
                 .updateDate(LocalDateTime.now())
                 .build();
 
-        beerMap.put(beer1.getId(), beer1);
-        beerMap.put(beer2.getId(), beer2);
-        beerMap.put(beer3.getId(), beer3);
+        beerMap.put(beerDTO1.getId(), beerDTO1);
+        beerMap.put(beerDTO2.getId(), beerDTO2);
+        beerMap.put(beerDTO3.getId(), beerDTO3);
     }
 
 
     @Override
-    public List<Beer> listBeers() {
+    public List<BeerDTO> listBeers() {
         return new ArrayList<>(beerMap.values());
     }
 
     @Override
-    public Beer getBeerById(UUID id) {
+    public BeerDTO getBeerById(UUID id) {
         return beerMap.get(id);
     }
 
     @Override
-    public Beer saveNewBeer(Beer beer) {
-        Beer newBeer = Beer.builder()
+    public BeerDTO saveNewBeer(BeerDTO beerDTO) {
+        BeerDTO newBeerDTO = BeerDTO.builder()
                 .id(UUID.randomUUID())
                 .createdDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())
-                .beerName(beer.getBeerName())
-                .beerStyle(beer.getBeerStyle())
-                .quantityOnHand(beer.getQuantityOnHand())
-                .price(beer.getPrice())
-                .upc(beer.getUpc())
-                .version(beer.getVersion())
+                .beerName(beerDTO.getBeerName())
+                .beerStyle(beerDTO.getBeerStyle())
+                .quantityOnHand(beerDTO.getQuantityOnHand())
+                .price(beerDTO.getPrice())
+                .upc(beerDTO.getUpc())
+                .version(beerDTO.getVersion())
                 .build();
 
-        beerMap.put(newBeer.getId(), newBeer);
-        return newBeer;
+        beerMap.put(newBeerDTO.getId(), newBeerDTO);
+        return newBeerDTO;
     }
 
     @Override
-    public Beer updateBeerById(UUID beerId, Beer updatedBeer) {
-        Beer beerToBeUpdated = beerMap.get(beerId);
-        if (beerToBeUpdated == null) {
+    public BeerDTO updateBeerById(UUID beerId, BeerDTO updatedBeerDTO) {
+        BeerDTO beerDTOToBeUpdated = beerMap.get(beerId);
+        if (beerDTOToBeUpdated == null) {
             log.warn("Could not find beer with id '{}' creating a new beer with that id.", beerId);
-            beerToBeUpdated = Beer.builder().build();
-            beerToBeUpdated.setCreatedDate(LocalDateTime.now());
+            beerDTOToBeUpdated = BeerDTO.builder().build();
+            beerDTOToBeUpdated.setCreatedDate(LocalDateTime.now());
         }
-        beerToBeUpdated.setId(beerId);
-        beerToBeUpdated.setVersion(updatedBeer.getVersion());
-        beerToBeUpdated.setBeerName(updatedBeer.getBeerName());
-        beerToBeUpdated.setBeerStyle(updatedBeer.getBeerStyle());
-        beerToBeUpdated.setQuantityOnHand(updatedBeer.getQuantityOnHand());
-        beerToBeUpdated.setPrice(updatedBeer.getPrice());
-        beerToBeUpdated.setUpc(updatedBeer.getUpc());
-        beerToBeUpdated.setUpdateDate(LocalDateTime.now());
-        return beerMap.put(beerToBeUpdated.getId(), beerToBeUpdated);
+        beerDTOToBeUpdated.setId(beerId);
+        beerDTOToBeUpdated.setVersion(updatedBeerDTO.getVersion());
+        beerDTOToBeUpdated.setBeerName(updatedBeerDTO.getBeerName());
+        beerDTOToBeUpdated.setBeerStyle(updatedBeerDTO.getBeerStyle());
+        beerDTOToBeUpdated.setQuantityOnHand(updatedBeerDTO.getQuantityOnHand());
+        beerDTOToBeUpdated.setPrice(updatedBeerDTO.getPrice());
+        beerDTOToBeUpdated.setUpc(updatedBeerDTO.getUpc());
+        beerDTOToBeUpdated.setUpdateDate(LocalDateTime.now());
+        return beerMap.put(beerDTOToBeUpdated.getId(), beerDTOToBeUpdated);
     }
 
     @Override
-    public Optional<Beer> deleteBeerById(UUID id) {
-        Beer beer = beerMap.remove(id);
-        return Optional.ofNullable(beer);
+    public Optional<BeerDTO> deleteBeerById(UUID id) {
+        BeerDTO beerDTO = beerMap.remove(id);
+        return Optional.ofNullable(beerDTO);
     }
 
     @Override
-    public Optional<Beer> patchBeerById(UUID beerId, Beer updatedBeer) {
-        Beer existingBeer = beerMap.get(beerId);
-        if (existingBeer == null) return Optional.empty();
+    public Optional<BeerDTO> patchBeerById(UUID beerId, BeerDTO updatedBeerDTO) {
+        BeerDTO existingBeerDTO = beerMap.get(beerId);
+        if (existingBeerDTO == null) return Optional.empty();
         boolean wasUpdated = false;
-        if (updatedBeer.getBeerName() != null) {
-            existingBeer.setBeerName(updatedBeer.getBeerName());
+        if (updatedBeerDTO.getBeerName() != null) {
+            existingBeerDTO.setBeerName(updatedBeerDTO.getBeerName());
             wasUpdated = true;
         }
-        if (updatedBeer.getPrice() != null) {
-            existingBeer.setPrice(updatedBeer.getPrice());
+        if (updatedBeerDTO.getPrice() != null) {
+            existingBeerDTO.setPrice(updatedBeerDTO.getPrice());
             wasUpdated = true;
         }
 
         // I could do the same checks for the remaining beer properties, but I won't because it is not needed for learning...
 
         if (wasUpdated) {
-            existingBeer.setUpdateDate(LocalDateTime.now());
+            existingBeerDTO.setUpdateDate(LocalDateTime.now());
         }
-        return Optional.of(existingBeer);
+        return Optional.of(existingBeerDTO);
     }
 }

@@ -1,6 +1,6 @@
 package me.noitcereon.practice.spring6restmvc.services;
 
-import me.noitcereon.practice.spring6restmvc.models.Beer;
+import me.noitcereon.practice.spring6restmvc.models.BeerDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,15 +8,15 @@ import java.util.UUID;
 
 public interface BeerService {
 
-    List<Beer> listBeers();
+    List<BeerDTO> listBeers();
 
-    Beer getBeerById(UUID id);
+    BeerDTO getBeerById(UUID id);
 
-    Beer saveNewBeer(Beer beer);
+    BeerDTO saveNewBeer(BeerDTO beerDTO);
 
-    Beer updateBeerById(UUID beerId, Beer updatedBeer);
+    BeerDTO updateBeerById(UUID beerId, BeerDTO updatedBeerDTO);
 
-    Optional<Beer> deleteBeerById(UUID id);
+    Optional<BeerDTO> deleteBeerById(UUID id);
 
-    Optional<Beer> patchBeerById(UUID beerId, Beer updatedBeer);
+    Optional<BeerDTO> patchBeerById(UUID beerId, BeerDTO updatedBeerDTO);
 }
