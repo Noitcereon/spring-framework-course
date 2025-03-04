@@ -1,7 +1,7 @@
 package me.noitcereon.practice.spring6restmvc.controllers;
 
 import me.noitcereon.practice.spring6restmvc.controllers.exception.NotFoundException;
-import me.noitcereon.practice.spring6restmvc.models.Customer;
+import me.noitcereon.practice.spring6restmvc.models.CustomerDTO;
 import me.noitcereon.practice.spring6restmvc.services.CustomerService;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -32,28 +32,28 @@ class CustomerControllerTest {
     @Test
     void givenCustomerId_whenFetchingCustomerById_thenTheCustomerWithTheGivenIdIsReturnedAsJson() throws Exception {
         // Arrange
-        Customer expectedCustomer = Customer.builder().id(UUID.randomUUID()).customerName("Eragon Shadeslayer").build();
-        when(mockCustomerService.getCustomerById(expectedCustomer.getId()))
-                .thenReturn(expectedCustomer);
+        CustomerDTO expectedCustomerDTO = CustomerDTO.builder().id(UUID.randomUUID()).customerName("Eragon Shadeslayer").build();
+        when(mockCustomerService.getCustomerById(expectedCustomerDTO.getId()))
+                .thenReturn(expectedCustomerDTO);
         // Act
         String endpoint = "/api/v1/customer/{customerId}"; // {customerId} is replaced in the MockMvcRequestBuilders.get() method by the additional argument provided to the method.
-        ResultActions performResult = mockMvc.perform(MockMvcRequestBuilders.get(endpoint, expectedCustomer.getId())
+        ResultActions performResult = mockMvc.perform(MockMvcRequestBuilders.get(endpoint, expectedCustomerDTO.getId())
                 .contentType(MediaType.APPLICATION_JSON));
 
         // Assert
         performResult.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(expectedCustomer.getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.customerName").value(expectedCustomer.getCustomerName()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(expectedCustomerDTO.getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.customerName").value(expectedCustomerDTO.getCustomerName()));
     }
 
     @Test
     void givenCustomerService_whenFetchingCustomerList_thenCustomerListIsReturnedAsJson() throws Exception {
         // Arrange
-        List<Customer> expectedCustomers = new ArrayList<>();
-        expectedCustomers.add(Customer.builder().id(UUID.randomUUID()).customerName("Eragon Shadeslayer").build());
-        expectedCustomers.add(Customer.builder().id(UUID.randomUUID()).customerName("Will Treaty").build());
-        when(mockCustomerService.listCustomers()).thenReturn(expectedCustomers);
+        List<CustomerDTO> expectedCustomerDTOS = new ArrayList<>();
+        expectedCustomerDTOS.add(CustomerDTO.builder().id(UUID.randomUUID()).customerName("Eragon Shadeslayer").build());
+        expectedCustomerDTOS.add(CustomerDTO.builder().id(UUID.randomUUID()).customerName("Will Treaty").build());
+        when(mockCustomerService.listCustomers()).thenReturn(expectedCustomerDTOS);
         String endpoint = "/api/v1/customer";
 
         // Act
@@ -63,11 +63,11 @@ class CustomerControllerTest {
         // Assert
         performResult.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(expectedCustomers.size()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(expectedCustomers.get(0).getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].customerName").value(expectedCustomers.get(0).getCustomerName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(expectedCustomers.get(1).getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].customerName").value(expectedCustomers.get(1).getCustomerName()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(expectedCustomerDTOS.size()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(expectedCustomerDTOS.get(0).getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].customerName").value(expectedCustomerDTOS.get(0).getCustomerName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(expectedCustomerDTOS.get(1).getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].customerName").value(expectedCustomerDTOS.get(1).getCustomerName()));
     }
 
     @Test

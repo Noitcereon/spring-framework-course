@@ -3,14 +3,14 @@ package me.noitcereon.practice.spring6restmvc.models;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class Customer {
+public class CustomerDTO {
     private UUID id;
     private String customerName;
     private Integer version;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
 
-    Customer(UUID id, String customerName, Integer version, LocalDateTime createdDate, LocalDateTime lastModifiedDate) {
+    CustomerDTO(UUID id, String customerName, Integer version, LocalDateTime createdDate, LocalDateTime lastModifiedDate) {
         this.id = id;
         this.customerName = customerName;
         this.version = version;
@@ -64,8 +64,8 @@ public class Customer {
 
     public boolean equals(final Object o) {
         if (o == this) return true;
-        if (!(o instanceof Customer)) return false;
-        final Customer other = (Customer) o;
+        if (!(o instanceof CustomerDTO)) return false;
+        final CustomerDTO other = (CustomerDTO) o;
         if (!other.canEqual((Object) this)) return false;
         final Object this$id = this.getId();
         final Object other$id = other.getId();
@@ -89,7 +89,7 @@ public class Customer {
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof Customer;
+        return other instanceof CustomerDTO;
     }
 
     public int hashCode() {
@@ -147,8 +147,8 @@ public class Customer {
             return this;
         }
 
-        public Customer build() {
-            return new Customer(this.id, this.customerName, this.version, this.createdDate, this.lastModifiedDate);
+        public CustomerDTO build() {
+            return new CustomerDTO(this.id, this.customerName, this.version, this.createdDate, this.lastModifiedDate);
         }
 
         public String toString() {

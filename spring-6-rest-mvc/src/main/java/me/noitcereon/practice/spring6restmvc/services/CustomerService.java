@@ -1,20 +1,20 @@
 package me.noitcereon.practice.spring6restmvc.services;
 
-import me.noitcereon.practice.spring6restmvc.models.Customer;
+import me.noitcereon.practice.spring6restmvc.models.CustomerDTO;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface CustomerService {
-    List<Customer> listCustomers();
-    Customer getCustomerById(UUID id);
+    List<CustomerDTO> listCustomers();
+    CustomerDTO getCustomerById(UUID id);
 
-    Customer createCustomer(Customer newCustomer);
+    CustomerDTO createCustomer(CustomerDTO newCustomerDTO);
 
-    Optional<Customer> updateCustomerById(UUID customerId, Customer updatedCustomer);
+    Optional<CustomerDTO> updateCustomerById(UUID customerId, CustomerDTO updatedCustomerDTO);
 
-    Optional<Customer> deleteCustomerId(UUID id);
+    Optional<CustomerDTO> deleteCustomerId(UUID id);
 
-    Optional<Customer> patchCustomerById(UUID customerId, Customer updatedCustomer);
+    Optional<CustomerDTO> patchCustomerById(UUID customerId, CustomerDTO updatedCustomerDTO);
 }
