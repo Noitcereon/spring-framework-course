@@ -18,13 +18,16 @@
         <license/>
     </licenses>
     <developers>
-        <developer/>
+        <developer>
+            <name>Thomas 'Noitcereon' Andersen</name>
+            <url>https://github.com/Noitcereon</url>
+        </developer>
     </developers>
     <scm>
-        <connection/>
-        <developerConnection/>
+        <connection>scm:git:https://github.com/Noitcereon/spring-framework-course</connection>
+        <developerConnection>scm:git:https://github.com/Noitcereon/spring-framework-course</developerConnection>
         <tag/>
-        <url/>
+        <url>https://github.com/Noitcereon/spring-framework-course</url>
     </scm>
     <properties>
         <java.version>21</java.version>
