@@ -8,6 +8,7 @@ class Spring6RestMvcApplicationTests {
 
     @Test
     void contextLoads() {
+        /* Checks if Spring Context can be loaded (triggered by @SpringBootTest) */
     }
 
 }
