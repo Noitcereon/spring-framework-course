@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class CustomerServiceImpl implements CustomerService {
+public class CustomerServiceMapDataImpl implements CustomerService {
 
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(CustomerServiceImpl.class);
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(CustomerServiceMapDataImpl.class);
     private final Map<UUID, CustomerDTO> customerMap;
 
-    public CustomerServiceImpl() {
+    public CustomerServiceMapDataImpl() {
         CustomerDTO customerDTO1 = CustomerDTO.builder()
                 .id(UUID.randomUUID())
                 .customerName("Noit Cereon")

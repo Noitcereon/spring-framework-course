@@ -10,12 +10,12 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class BeerServiceImpl implements BeerService {
+public class BeerServiceMapDataImpl implements BeerService {
 
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(BeerServiceImpl.class);
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(BeerServiceMapDataImpl.class);
     private final Map<UUID, BeerDTO> beerMap;
 
-    public BeerServiceImpl() {
+    public BeerServiceMapDataImpl() {
         this.beerMap = new HashMap<>();
 
         BeerDTO beerDTO1 = BeerDTO.builder()

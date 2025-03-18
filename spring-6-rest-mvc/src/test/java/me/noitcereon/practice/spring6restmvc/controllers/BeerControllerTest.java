@@ -6,7 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import me.noitcereon.practice.spring6restmvc.controllers.exception.NotFoundException;
 import me.noitcereon.practice.spring6restmvc.models.BeerDTO;
 import me.noitcereon.practice.spring6restmvc.services.BeerService;
-import me.noitcereon.practice.spring6restmvc.services.BeerServiceImpl;
+import me.noitcereon.practice.spring6restmvc.services.BeerServiceMapDataImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,11 +40,11 @@ class BeerControllerTest {
 
     ObjectMapper objectMapper;
 
-    private BeerServiceImpl beerServiceImpl;
+    private BeerServiceMapDataImpl beerServiceMapDataImpl;
 
     @BeforeEach
     void setUp() {
-        beerServiceImpl = new BeerServiceImpl();
+        beerServiceMapDataImpl = new BeerServiceMapDataImpl();
 
         /*
          * JavaTimeModule is a class that registers capability of serializing java.time objects
@@ -55,12 +55,12 @@ class BeerControllerTest {
 
     @Test
     void givenBeerService_whenCallingCreateBeerEndpoint_thenCreatedResponseIsReturned() throws Exception {
-        BeerDTO newBeerDTO = beerServiceImpl.listBeers().get(0);
+        BeerDTO newBeerDTO = beerServiceMapDataImpl.listBeers().get(0);
         newBeerDTO.setId(null);
         newBeerDTO.setVersion(null);
 
         BDDMockito.given(mockBeerService.saveNewBeer(ArgumentMatchers.any(BeerDTO.class)))
-                .willReturn(beerServiceImpl.listBeers().get(1));
+                .willReturn(beerServiceMapDataImpl.listBeers().get(1));
 
         String endpoint = BeerController.BASE_URL;
         var performResult = mockMvc.perform(MockMvcRequestBuilders.post(endpoint)
@@ -75,7 +75,7 @@ class BeerControllerTest {
     @Test
     void testUpdateBeer() throws Exception {
         // Arrange
-        BeerDTO beerDTOToUpdate = beerServiceImpl.listBeers().get(0);
+        BeerDTO beerDTOToUpdate = beerServiceMapDataImpl.listBeers().get(0);
 
         BDDMockito.given(mockBeerService.updateBeerById(ArgumentMatchers.any(UUID.class), ArgumentMatchers.any(BeerDTO.class)))
                 .willReturn(beerDTOToUpdate);
@@ -137,7 +137,7 @@ class BeerControllerTest {
     @Test
     void testDeleteBeerById() throws Exception {
         // Arrange
-        BeerDTO simulatedExistingBeerDTO = beerServiceImpl.listBeers().get(0);
+        BeerDTO simulatedExistingBeerDTO = beerServiceMapDataImpl.listBeers().get(0);
         String endpoint = BeerController.BASE_URL + "/" + simulatedExistingBeerDTO.getId();
         Optional<BeerDTO> stubResponse = Optional.of(simulatedExistingBeerDTO);
         BDDMockito.given(mockBeerService.deleteBeerById(simulatedExistingBeerDTO.getId()))
