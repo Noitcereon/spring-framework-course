@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: "spring-6-rest-mvc"
+  h2:
+    console:
+      enabled: false
