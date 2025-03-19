@@ -78,7 +78,7 @@ class BeerControllerTest {
         BeerDTO beerDTOToUpdate = beerServiceMapDataImpl.listBeers().get(0);
 
         BDDMockito.given(mockBeerService.updateBeerById(ArgumentMatchers.any(UUID.class), ArgumentMatchers.any(BeerDTO.class)))
-                .willReturn(beerDTOToUpdate);
+                .willReturn(Optional.of(beerDTOToUpdate));
         String endpoint = BeerController.BASE_URL + "/" + beerDTOToUpdate.getId();
 
         // Act

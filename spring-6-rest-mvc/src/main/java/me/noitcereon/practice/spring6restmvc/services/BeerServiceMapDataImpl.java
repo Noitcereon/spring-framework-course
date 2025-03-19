@@ -89,7 +89,7 @@ public class BeerServiceMapDataImpl implements BeerService {
     }
 
     @Override
-    public BeerDTO updateBeerById(UUID beerId, BeerDTO updatedBeerDTO) {
+    public Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO updatedBeerDTO) {
         BeerDTO beerDTOToBeUpdated = beerMap.get(beerId);
         if (beerDTOToBeUpdated == null) {
             log.warn("Could not find beer with id '{}' creating a new beer with that id.", beerId);
@@ -104,7 +104,7 @@ public class BeerServiceMapDataImpl implements BeerService {
         beerDTOToBeUpdated.setPrice(updatedBeerDTO.getPrice());
         beerDTOToBeUpdated.setUpc(updatedBeerDTO.getUpc());
         beerDTOToBeUpdated.setUpdateDate(LocalDateTime.now());
-        return beerMap.put(beerDTOToBeUpdated.getId(), beerDTOToBeUpdated);
+        return Optional.ofNullable(beerMap.put(beerDTOToBeUpdated.getId(), beerDTOToBeUpdated));
     }
 
     @Override

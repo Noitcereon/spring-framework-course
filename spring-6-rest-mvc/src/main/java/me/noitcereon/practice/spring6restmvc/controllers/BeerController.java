@@ -43,8 +43,9 @@ public class BeerController {
 
     @PutMapping("/{beerId}")
     public ResponseEntity<BeerDTO> updateBeerById(@PathVariable UUID beerId, @RequestBody BeerDTO updatedBeerDTO) {
-        BeerDTO savedBeerDTO = beerService.updateBeerById(beerId, updatedBeerDTO);
-        return ResponseEntity.ok().body(savedBeerDTO);
+        Optional<BeerDTO> savedBeerDTO = beerService.updateBeerById(beerId, updatedBeerDTO);
+        return savedBeerDTO.map(beerDTO -> ResponseEntity.ok().body(beerDTO))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{beerId}")
