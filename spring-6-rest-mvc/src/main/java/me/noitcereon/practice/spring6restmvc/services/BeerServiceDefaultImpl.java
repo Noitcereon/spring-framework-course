@@ -27,8 +27,10 @@ public class BeerServiceDefaultImpl implements BeerService {
     }
 
     @Override
-    public BeerDTO getBeerById(UUID id) {
-        return null;
+    public Optional<BeerDTO> getBeerById(UUID id) {
+        return Optional.ofNullable(beerMapper.beerToBeerDto(
+                beerRepo.findById(id).orElse(null)
+        ));
     }
 
     @Override
