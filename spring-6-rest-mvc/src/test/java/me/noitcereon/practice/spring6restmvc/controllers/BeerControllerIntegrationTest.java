@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -72,11 +73,13 @@ class BeerControllerIntegrationTest {
                 .build();
 
         ResponseEntity<BeerDTO> response = beerController.createBeer(beerDtoToCreate);
+        URI createdLocation = response.getHeaders().getLocation();
+        BeerDTO createdBeerDto = response.getBody();
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertNotNull(response.getHeaders().getLocation());
-        BeerDTO createdBeerDto = response.getBody();
         assertNotNull(createdBeerDto);
+        assertNotNull(createdLocation);
+        assertEquals(URI.create("/api/v1/beer/" + createdBeerDto.getId()), createdLocation);
         Optional<Beer> beerEntity = beerRepo.findById(createdBeerDto.getId());
         assertTrue(beerEntity.isPresent());
         assertEquals(beerDtoToCreate.getBeerName(), beerEntity.get().getBeerName());
