@@ -13,6 +13,7 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Primary
 @RequiredArgsConstructor
@@ -43,8 +44,23 @@ public class BeerServiceDefaultImpl implements BeerService {
     }
 
     @Override
-    public BeerDTO updateBeerById(UUID beerId, BeerDTO updatedBeerDTO) {
-        return null;
+    public Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO updatedBeerDto) {
+
+        AtomicReference<Optional<BeerDTO>> atomicBeerDtoReference = new AtomicReference<>();
+
+        beerRepo.findById(beerId).ifPresentOrElse(foundBeer -> {
+                    /* Note: ID and Version is managed by Hibernate and should not be changed via dto object */
+                    foundBeer.setBeerName(updatedBeerDto.getBeerName());
+                    foundBeer.setBeerStyle(updatedBeerDto.getBeerStyle());
+                    foundBeer.setUpc(updatedBeerDto.getUpc());
+                    foundBeer.setPrice(updatedBeerDto.getPrice());
+                    foundBeer.setQuantityOnHand(updatedBeerDto.getQuantityOnHand());
+                    foundBeer.setUpdateDate(LocalDateTime.now(ZoneOffset.UTC));
+                    atomicBeerDtoReference.set(Optional.of(beerMapper.beerToBeerDto(foundBeer)));
+                }, () -> atomicBeerDtoReference.set(Optional.empty())
+        );
+
+        return atomicBeerDtoReference.get();
     }
 
     @Override

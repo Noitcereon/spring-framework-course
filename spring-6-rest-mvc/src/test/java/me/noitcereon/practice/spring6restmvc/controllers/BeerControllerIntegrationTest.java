@@ -2,6 +2,7 @@ package me.noitcereon.practice.spring6restmvc.controllers;
 
 import jakarta.transaction.Transactional;
 import me.noitcereon.practice.spring6restmvc.entities.Beer;
+import me.noitcereon.practice.spring6restmvc.mappers.BeerMapper;
 import me.noitcereon.practice.spring6restmvc.models.BeerDTO;
 import me.noitcereon.practice.spring6restmvc.repositories.BeerRepo;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,9 @@ class BeerControllerIntegrationTest {
 
     @Autowired
     private BeerRepo beerRepo;
+
+    @Autowired
+    private BeerMapper beerMapper;
 
     @Test
     void testGetAllBeersSuccess() {
@@ -83,5 +87,25 @@ class BeerControllerIntegrationTest {
         Optional<Beer> beerEntity = beerRepo.findById(createdBeerDto.getId());
         assertTrue(beerEntity.isPresent());
         assertEquals(beerDtoToCreate.getBeerName(), beerEntity.get().getBeerName());
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    void testUpdateBeerSuccess(){
+        // Arrange
+        BeerDTO beerToChange = beerMapper.beerToBeerDto(beerRepo.findAll().getFirst());
+        String updatedBeerName = "UPDATED " + beerToChange.getBeerName();
+        beerToChange.setBeerName(updatedBeerName);
+
+        // Act
+        ResponseEntity<BeerDTO> response = beerController.updateBeerById(beerToChange.getId(), beerToChange);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        BeerDTO responseBeerDto = response.getBody();
+        assertEquals(beerToChange.getId(), responseBeerDto.getId());
+        assertEquals(updatedBeerName, responseBeerDto.getBeerName());
     }
 }
