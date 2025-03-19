@@ -121,7 +121,7 @@ class BeerControllerTest {
         BeerDTO testBeerDTO = BeerDTO.builder().beerName("Test Beer").id(UUID.randomUUID()).build();
         String endpoint = "/api/v1/beer/" + testBeerDTO.getId();
         BDDMockito.given(mockBeerService.getBeerById(testBeerDTO.getId()))
-                .willReturn(testBeerDTO);
+                .willReturn(Optional.of(testBeerDTO));
 
         // Act
         ResultActions performResult = mockMvc.perform(MockMvcRequestBuilders.get(endpoint)

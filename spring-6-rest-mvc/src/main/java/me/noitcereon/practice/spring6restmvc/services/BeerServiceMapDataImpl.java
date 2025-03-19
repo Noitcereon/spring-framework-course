@@ -66,8 +66,8 @@ public class BeerServiceMapDataImpl implements BeerService {
     }
 
     @Override
-    public BeerDTO getBeerById(UUID id) {
-        return beerMap.get(id);
+    public Optional<BeerDTO> getBeerById(UUID id) {
+        return Optional.ofNullable(beerMap.get(id));
     }
 
     @Override
