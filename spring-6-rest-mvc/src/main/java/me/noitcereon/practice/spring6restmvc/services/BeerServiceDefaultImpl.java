@@ -8,6 +8,8 @@ import me.noitcereon.practice.spring6restmvc.repositories.BeerRepo;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,8 +36,10 @@ public class BeerServiceDefaultImpl implements BeerService {
     }
 
     @Override
-    public BeerDTO saveNewBeer(BeerDTO beerDTO) {
-        return null;
+    public BeerDTO saveNewBeer(BeerDTO beerDto) {
+        beerDto.setCreatedDate(LocalDateTime.now(ZoneOffset.UTC));
+        Beer savedBeer = beerRepo.save(beerMapper.beerDtoToBeer(beerDto));
+        return beerMapper.beerToBeerDto(savedBeer);
     }
 
     @Override
