@@ -38,7 +38,7 @@ public class BeerController {
         BeerDTO savedBeerDTO = beerService.saveNewBeer(beerDTO);
         return ResponseEntity
                 .created(URI.create("/api/v1/beer/" + savedBeerDTO.getId()))
-                .build();
+                .body(savedBeerDTO);
     }
 
     @PutMapping("/{beerId}")
