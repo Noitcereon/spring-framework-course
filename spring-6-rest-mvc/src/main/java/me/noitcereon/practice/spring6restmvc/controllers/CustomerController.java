@@ -50,7 +50,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{customerId}")
-    public ResponseEntity deleteBeerById(@PathVariable("customerId") UUID id) {
+    public ResponseEntity deleteCustomerById(@PathVariable("customerId") UUID id) {
         Optional<CustomerDTO> deletedCustomer = customerService.deleteCustomerId(id);
         if (deletedCustomer.isEmpty()) return ResponseEntity.notFound().build();
         return ResponseEntity.noContent().build();
