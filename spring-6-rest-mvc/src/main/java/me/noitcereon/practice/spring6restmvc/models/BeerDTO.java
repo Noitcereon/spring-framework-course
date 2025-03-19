@@ -6,7 +6,7 @@ import java.util.UUID;
 
 
 /**
- * A beer model made with the help of Lombok.
+ * A beer model made with the help of Lombok (and then delomboked)
  *
  * <h2>Lombok with IntelliJ</h2>
  * To work optimally with Lombok you should enable Annotation Processing.
