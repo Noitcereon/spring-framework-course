@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
@@ -34,7 +35,7 @@ class CustomerControllerTest {
         // Arrange
         CustomerDTO expectedCustomerDTO = CustomerDTO.builder().id(UUID.randomUUID()).customerName("Eragon Shadeslayer").build();
         when(mockCustomerService.getCustomerById(expectedCustomerDTO.getId()))
-                .thenReturn(expectedCustomerDTO);
+                .thenReturn(Optional.of(expectedCustomerDTO));
         // Act
         String endpoint = "/api/v1/customer/{customerId}"; // {customerId} is replaced in the MockMvcRequestBuilders.get() method by the additional argument provided to the method.
         ResultActions performResult = mockMvc.perform(MockMvcRequestBuilders.get(endpoint, expectedCustomerDTO.getId())

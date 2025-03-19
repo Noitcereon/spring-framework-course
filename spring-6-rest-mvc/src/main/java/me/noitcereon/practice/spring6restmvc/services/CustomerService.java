@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface CustomerService {
     List<CustomerDTO> listCustomers();
-    CustomerDTO getCustomerById(UUID id);
+    Optional<CustomerDTO> getCustomerById(UUID id);
 
     CustomerDTO createCustomer(CustomerDTO newCustomerDTO);
 

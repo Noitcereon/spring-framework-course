@@ -29,7 +29,7 @@ public class CustomerController {
     }
 
     @GetMapping("/{customerId}")
-    public CustomerDTO getCustomerById(@PathVariable UUID customerId) {
+    public Optional<CustomerDTO> getCustomerById(@PathVariable UUID customerId) {
         log.info("Get customer by id called with id: {}", customerId);
         return customerService.getCustomerById(customerId);
     }
