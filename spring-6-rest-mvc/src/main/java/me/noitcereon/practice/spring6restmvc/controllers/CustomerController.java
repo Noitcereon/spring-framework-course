@@ -35,11 +35,11 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity createCustomer(@RequestBody CustomerDTO customerDTO) {
+    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO) {
         CustomerDTO newCustomerDTO = customerService.createCustomer(customerDTO);
         return ResponseEntity
                 .created(URI.create("/api/v1/customer/" + newCustomerDTO.getId()))
-                .build();
+                .body(newCustomerDTO);
     }
 
     @PutMapping("{customerId}")
@@ -50,7 +50,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{customerId}")
-    public ResponseEntity deleteCustomerById(@PathVariable("customerId") UUID id) {
+    public ResponseEntity<Void> deleteCustomerById(@PathVariable("customerId") UUID id) {
         Optional<CustomerDTO> deletedCustomer = customerService.deleteCustomerId(id);
         if (deletedCustomer.isEmpty()) return ResponseEntity.notFound().build();
         return ResponseEntity.noContent().build();
