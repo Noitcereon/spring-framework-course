@@ -69,7 +69,8 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>2.3.232</version>
-            <scope>test</scope>
+            <!-- Should normally only be scoped as a test dependency, but
+             since this is a practice app it is included a normal compile dependency.-->
         </dependency>
     </dependencies>
 
