@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -66,7 +67,7 @@ public class BeerServiceDefaultImpl implements BeerService {
     @Override
     public Boolean deleteBeerById(UUID id) {
         boolean didDelete = false;
-        if(beerRepo.existsById(id)) {
+        if (beerRepo.existsById(id)) {
             beerRepo.deleteById(id);
             didDelete = true;
         }
@@ -74,7 +75,25 @@ public class BeerServiceDefaultImpl implements BeerService {
     }
 
     @Override
-    public Optional<BeerDTO> patchBeerById(UUID beerId, BeerDTO updatedBeerDTO) {
-        return Optional.empty();
+    public Optional<BeerDTO> patchBeerById(UUID beerId, BeerDTO updatedBeerDto) {
+        AtomicReference<Optional<BeerDTO>> atomicBeerDtoReference = new AtomicReference<>();
+        // TODO: investigate the SQL Hibernate uses to patch.
+        beerRepo.findById(beerId).ifPresentOrElse(foundBeer -> {
+                    /* Note: ID and Version is managed by Hibernate and should not be changed via dto object */
+                    if (!Objects.equals(foundBeer.getBeerName(), updatedBeerDto.getBeerName())) {
+                        foundBeer.setBeerName(updatedBeerDto.getBeerName());
+                    }
+                    if (!Objects.equals(foundBeer.getPrice(), updatedBeerDto.getPrice())) {
+                        foundBeer.setPrice(updatedBeerDto.getPrice());
+                    }
+                    if (!Objects.equals(foundBeer.getQuantityOnHand(), updatedBeerDto.getQuantityOnHand())) {
+                        foundBeer.setQuantityOnHand(updatedBeerDto.getQuantityOnHand());
+                    }
+                    foundBeer.setUpdateDate(LocalDateTime.now(ZoneOffset.UTC));
+                    atomicBeerDtoReference.set(Optional.of(beerMapper.beerToBeerDto(foundBeer)));
+                }, () -> atomicBeerDtoReference.set(Optional.empty())
+        );
+
+        return atomicBeerDtoReference.get();
     }
 }

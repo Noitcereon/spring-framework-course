@@ -92,7 +92,7 @@ class BeerControllerIntegrationTest {
     @Rollback
     @Transactional
     @Test
-    void testUpdateBeerSuccess(){
+    void testUpdateBeerSuccess() {
         // Arrange
         BeerDTO beerToChange = beerMapper.beerToBeerDto(beerRepo.findAll().getFirst());
         String updatedBeerName = "UPDATED " + beerToChange.getBeerName();
@@ -108,10 +108,11 @@ class BeerControllerIntegrationTest {
         assertEquals(beerToChange.getId(), responseBeerDto.getId());
         assertEquals(updatedBeerName, responseBeerDto.getBeerName());
     }
+
     @Rollback
     @Transactional
     @Test
-    void testDeleteBeerByIdSuccess(){
+    void testDeleteBeerByIdSuccess() {
         Beer beer = beerRepo.findAll().get(0);
 
         ResponseEntity<Void> deleteResponse1 = beerController.deleteBeerById(beer.getId());
@@ -119,5 +120,25 @@ class BeerControllerIntegrationTest {
 
         assertEquals(HttpStatus.NO_CONTENT, deleteResponse1.getStatusCode());
         assertEquals(HttpStatus.NOT_FOUND, deleteResponse2.getStatusCode());
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    void testPatchBeerSuccess() {
+        Beer existingBeer = beerRepo.findAll().get(0);
+        BeerDTO existingBeerPatched = beerMapper.beerToBeerDto(existingBeer);
+        existingBeerPatched.setBeerName("Patched Beer");
+
+        ResponseEntity<BeerDTO> patchResponse = beerController.patchBeerById(existingBeer.getId(), existingBeerPatched);
+        Optional<BeerDTO> getByIdResponse = beerController.getBeerById(existingBeer.getId());
+
+        assertNotNull(patchResponse.getBody());
+        assertEquals(HttpStatus.OK, patchResponse.getStatusCode());
+        assertTrue(getByIdResponse.isPresent());
+        assertEquals(existingBeerPatched.getBeerName(), patchResponse.getBody().getBeerName());
+        assertEquals(existingBeerPatched.getId(), patchResponse.getBody().getId());
+        assertEquals(existingBeer.getPrice(), patchResponse.getBody().getPrice());
+        assertEquals(existingBeerPatched.getBeerName(), getByIdResponse.get().getBeerName());
     }
 }
