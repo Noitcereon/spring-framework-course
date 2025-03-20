@@ -77,7 +77,6 @@ public class BeerServiceDefaultImpl implements BeerService {
     @Override
     public Optional<BeerDTO> patchBeerById(UUID beerId, BeerDTO updatedBeerDto) {
         AtomicReference<Optional<BeerDTO>> atomicBeerDtoReference = new AtomicReference<>();
-        // TODO: investigate the SQL Hibernate uses to patch.
         beerRepo.findById(beerId).ifPresentOrElse(foundBeer -> {
                     /* Note: ID and Version is managed by Hibernate and should not be changed via dto object */
                     if (!Objects.equals(foundBeer.getBeerName(), updatedBeerDto.getBeerName())) {
