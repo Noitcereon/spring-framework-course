@@ -34,6 +34,7 @@ public class CustomerServiceDefaultImpl implements CustomerService {
 
     @Override
     public CustomerDTO createCustomer(CustomerDTO newCustomerDTO) {
+        // TODO: Section 9 assignment 17 (implement JPA create, update, delete and patch with CustomerControllerIntegrationTest)
         return null;
     }
 
