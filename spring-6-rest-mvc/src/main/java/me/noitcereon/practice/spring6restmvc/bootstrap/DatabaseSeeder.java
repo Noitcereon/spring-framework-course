@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 /**
@@ -40,8 +41,8 @@ public class DatabaseSeeder implements CommandLineRunner {
                 .upc("123536")
                 .price(new BigDecimal("12.99"))
                 .quantityOnHand(122)
-                .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .createdDate(LocalDateTime.now(ZoneOffset.UTC))
+                .updateDate(LocalDateTime.now(ZoneOffset.UTC))
                 .build();
 
         Beer beer2 = Beer.builder()
@@ -50,8 +51,8 @@ public class DatabaseSeeder implements CommandLineRunner {
                 .upc("12356222")
                 .price(new BigDecimal("11.99"))
                 .quantityOnHand(392)
-                .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .createdDate(LocalDateTime.now(ZoneOffset.UTC))
+                .updateDate(LocalDateTime.now(ZoneOffset.UTC))
                 .build();
 
         Beer beer3 = Beer.builder()
@@ -60,8 +61,8 @@ public class DatabaseSeeder implements CommandLineRunner {
                 .upc("12356")
                 .price(new BigDecimal("13.99"))
                 .quantityOnHand(144)
-                .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .createdDate(LocalDateTime.now(ZoneOffset.UTC))
+                .updateDate(LocalDateTime.now(ZoneOffset.UTC))
                 .build();
         List<Beer> beers = List.of(beer1, beer2, beer3);
         beerRepo.saveAll(beers);
@@ -70,18 +71,18 @@ public class DatabaseSeeder implements CommandLineRunner {
     private void seedCustomerData() {
         Customer customer1 = Customer.builder()
                 .customerName("Noit Cereon")
-                .createdDate(LocalDateTime.now())
-                .lastModifiedDate(LocalDateTime.now())
+                .createdDate(LocalDateTime.now(ZoneOffset.UTC))
+                .lastModifiedDate(LocalDateTime.now(ZoneOffset.UTC))
                 .build();
         Customer customer2 = Customer.builder()
                 .customerName("Eragon Shadeslayer")
-                .createdDate(LocalDateTime.now())
-                .lastModifiedDate(LocalDateTime.now())
+                .createdDate(LocalDateTime.now(ZoneOffset.UTC))
+                .lastModifiedDate(LocalDateTime.now(ZoneOffset.UTC))
                 .build();
         Customer customer3 = Customer.builder()
                 .customerName("Will Treaty")
-                .createdDate(LocalDateTime.now())
-                .lastModifiedDate(LocalDateTime.now())
+                .createdDate(LocalDateTime.now(ZoneOffset.UTC))
+                .lastModifiedDate(LocalDateTime.now(ZoneOffset.UTC))
                 .build();
         List<Customer> customers = List.of(customer1, customer2, customer3);
         customerRepo.saveAll(customers);
