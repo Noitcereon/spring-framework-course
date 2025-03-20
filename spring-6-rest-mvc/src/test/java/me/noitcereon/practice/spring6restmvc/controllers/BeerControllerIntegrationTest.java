@@ -108,4 +108,16 @@ class BeerControllerIntegrationTest {
         assertEquals(beerToChange.getId(), responseBeerDto.getId());
         assertEquals(updatedBeerName, responseBeerDto.getBeerName());
     }
+    @Rollback
+    @Transactional
+    @Test
+    void testDeleteBeerByIdSuccess(){
+        Beer beer = beerRepo.findAll().get(0);
+
+        ResponseEntity<Void> deleteResponse1 = beerController.deleteBeerById(beer.getId());
+        ResponseEntity<Void> deleteResponse2 = beerController.deleteBeerById(beer.getId());
+
+        assertEquals(HttpStatus.NO_CONTENT, deleteResponse1.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, deleteResponse2.getStatusCode());
+    }
 }

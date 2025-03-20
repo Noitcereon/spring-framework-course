@@ -64,8 +64,13 @@ public class BeerServiceDefaultImpl implements BeerService {
     }
 
     @Override
-    public Optional<BeerDTO> deleteBeerById(UUID id) {
-        return Optional.empty();
+    public Boolean deleteBeerById(UUID id) {
+        boolean didDelete = false;
+        if(beerRepo.existsById(id)) {
+            beerRepo.deleteById(id);
+            didDelete = true;
+        }
+        return didDelete;
     }
 
     @Override

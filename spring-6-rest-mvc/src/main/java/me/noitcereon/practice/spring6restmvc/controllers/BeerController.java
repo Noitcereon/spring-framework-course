@@ -50,9 +50,9 @@ public class BeerController {
 
     @DeleteMapping("/{beerId}")
     public ResponseEntity<Void> deleteBeerById(@PathVariable("beerId") UUID id) {
-        Optional<BeerDTO> deletedBeer = beerService.deleteBeerById(id);
-        if (deletedBeer.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.noContent().build();
+        boolean wasABeerDeleted = beerService.deleteBeerById(id);
+        if (wasABeerDeleted) return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 
     @PatchMapping("/{beerId}")

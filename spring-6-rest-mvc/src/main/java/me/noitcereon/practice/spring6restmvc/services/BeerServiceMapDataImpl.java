@@ -108,9 +108,8 @@ public class BeerServiceMapDataImpl implements BeerService {
     }
 
     @Override
-    public Optional<BeerDTO> deleteBeerById(UUID id) {
-        BeerDTO beerDTO = beerMap.remove(id);
-        return Optional.ofNullable(beerDTO);
+    public Boolean deleteBeerById(UUID id) {
+        return beerMap.remove(id) != null;
     }
 
     @Override

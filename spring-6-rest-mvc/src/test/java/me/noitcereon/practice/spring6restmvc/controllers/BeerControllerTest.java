@@ -139,9 +139,8 @@ class BeerControllerTest {
         // Arrange
         BeerDTO simulatedExistingBeerDTO = beerServiceMapDataImpl.listBeers().get(0);
         String endpoint = BeerController.BASE_URL + "/" + simulatedExistingBeerDTO.getId();
-        Optional<BeerDTO> stubResponse = Optional.of(simulatedExistingBeerDTO);
         BDDMockito.given(mockBeerService.deleteBeerById(simulatedExistingBeerDTO.getId()))
-                .willReturn(stubResponse);
+                .willReturn(true);
         ArgumentCaptor<UUID> argCaptor = ArgumentCaptor.forClass(UUID.class);
 
         // Act
