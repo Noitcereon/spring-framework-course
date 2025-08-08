@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,4 +25,11 @@ public class CustomErrorController {
             .toString();
     return ResponseEntity.badRequest().body(errorMessage);
   }
+
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  ResponseEntity<String> handleTypeMismatch(MethodArgumentTypeMismatchException exception){
+    String errorMessage = "Parameter mismatch for '%s'. The given value '%s' does not match the required type '%s'".formatted(exception.getName(), exception.getValue(), exception.getRequiredType());
+    return ResponseEntity.badRequest().body(errorMessage);
+  }
+
 }
