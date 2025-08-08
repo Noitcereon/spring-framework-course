@@ -26,6 +26,8 @@ import java.util.UUID;
 public class BeerDTO {
     private UUID id;
     private Integer version;
+    @NotNull
+    @NotBlank
     private String beerName;
     private BeerStyle beerStyle;
     private String upc;
@@ -58,8 +60,6 @@ public class BeerDTO {
         return this.version;
     }
 
-    @NotNull
-    @NotBlank
     public String getBeerName() {
         return this.beerName;
     }
