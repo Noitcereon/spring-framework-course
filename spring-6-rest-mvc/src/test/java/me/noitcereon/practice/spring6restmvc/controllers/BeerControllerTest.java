@@ -207,7 +207,35 @@ class BeerControllerTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
     String responseContent = mvcResult.getResponse().getContentAsString();
     Assertions.assertFalse(responseContent.isBlank());
-    Assertions.assertEquals(
-        "[{beerName=must not be null}, {beerName=must not be blank}]", responseContent);
+    Assertions.assertTrue(responseContent.contains("{beerName=must not be null}"));
+    Assertions.assertTrue(responseContent.contains("{beerName=must not be blank}"));
+  }
+
+  @Test
+  void updateBeerValidationWorks() throws Exception {
+    // Given
+    String beerId = UUID.randomUUID().toString();
+    BeerDTO beerDto = BeerDTO.builder().build();
+    String updateUrl = BeerController.BASE_URL + "/%s".formatted(beerId);
+    String unexpectedBlank = "";
+    // When
+    ResultActions result =
+        mockMvc.perform(
+            MockMvcRequestBuilders.put(updateUrl)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(beerDto)));
+
+    // Then
+    MvcResult mvcResult =
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
+    String errorResponse = mvcResult.getResponse().getContentAsString();
+
+    Assertions.assertNotEquals(unexpectedBlank, errorResponse);
+    Assertions.assertTrue(errorResponse.contains("{beerName=must not be blank}"));
+    Assertions.assertTrue(errorResponse.contains("{beerName=must not be null}"));
+    Assertions.assertTrue(errorResponse.contains("{beerStyle=must not be null}"));
+    Assertions.assertTrue(errorResponse.contains("{upc=must not be null}"));
+    Assertions.assertTrue(errorResponse.contains("{price=must not be null}"));
   }
 }
