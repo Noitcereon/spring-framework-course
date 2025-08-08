@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -29,10 +30,8 @@ import java.util.UUID;
 
 import static org.hamcrest.Matchers.is;
 
-@WebMvcTest(
-    BeerController
-        .class) // A Spring "Test Slice" to minimize test setup. See also:
-                // https://docs.spring.io/spring-boot/appendix/test-auto-configuration/slices.html
+@WebMvcTest(BeerController.class) // A Spring "Test Slice" to minimize test setup. See also:
+// https://docs.spring.io/spring-boot/appendix/test-auto-configuration/slices.html
 class BeerControllerTest {
 
   @Autowired MockMvc mockMvc;
@@ -186,25 +185,29 @@ class BeerControllerTest {
     result.andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
-    /**
-     * Tests the Java Bean Validation (Example annotations: @Validated and @NotNull, @NotBlank)
-     */
+  /** Tests the Java Bean Validation (Example annotations: @Validated and @NotNull, @NotBlank) */
   @Test
   void testCreateBeerNullBeerName() throws Exception {
-      BeerDTO beerDTO = BeerDTO.builder().build();
+    BeerDTO beerDTO = BeerDTO.builder().build();
 
-      // Given
-      BDDMockito.given(mockBeerService.saveNewBeer(BDDMockito.any(BeerDTO.class))).willReturn(beerServiceMapDataImpl.listBeers().get(1));
+    // Given
+    BDDMockito.given(mockBeerService.saveNewBeer(BDDMockito.any(BeerDTO.class)))
+        .willReturn(beerServiceMapDataImpl.listBeers().get(1));
 
     // When
     ResultActions result =
-        mockMvc
-            .perform(MockMvcRequestBuilders.post(BeerController.BASE_URL)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(beerDTO)));
+        mockMvc.perform(
+            MockMvcRequestBuilders.post(BeerController.BASE_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(beerDTO)));
 
     // Then
-      result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+    MvcResult mvcResult =
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
+    String responseContent = mvcResult.getResponse().getContentAsString();
+    Assertions.assertFalse(responseContent.isBlank());
+    Assertions.assertEquals(
+        "[{beerName=must not be null}, {beerName=must not be blank}]", responseContent);
   }
 }
