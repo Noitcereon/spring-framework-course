@@ -1,5 +1,6 @@
 package me.noitcereon.practice.spring6restmvc.controllers;
 
+import jakarta.validation.constraints.NotNull;
 import me.noitcereon.practice.spring6restmvc.models.BeerDTO;
 import me.noitcereon.practice.spring6restmvc.services.BeerService;
 import org.slf4j.Logger;
@@ -43,7 +44,7 @@ public class BeerController {
     }
 
     @PutMapping("/{beerId}")
-    public ResponseEntity<BeerDTO> updateBeerById(@PathVariable UUID beerId, @RequestBody BeerDTO updatedBeerDTO) {
+    public ResponseEntity<BeerDTO> updateBeerById(@PathVariable UUID beerId, @Validated @RequestBody BeerDTO updatedBeerDTO) {
         Optional<BeerDTO> savedBeerDTO = beerService.updateBeerById(beerId, updatedBeerDTO);
         return savedBeerDTO.map(beerDTO -> ResponseEntity.ok().body(beerDTO))
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -57,7 +58,7 @@ public class BeerController {
     }
 
     @PatchMapping("/{beerId}")
-    public ResponseEntity<BeerDTO> patchBeerById(@PathVariable("beerId") UUID beerId, @RequestBody BeerDTO updatedBeerDTO) {
+    public ResponseEntity<BeerDTO> patchBeerById(@NotNull @PathVariable("beerId") UUID beerId, @Validated @RequestBody BeerDTO updatedBeerDTO) {
         Optional<BeerDTO> savedBeer = beerService.patchBeerById(beerId, updatedBeerDTO);
         if (savedBeer.isEmpty()) return ResponseEntity.notFound().build();
         return ResponseEntity.ok().body(savedBeer.get());
