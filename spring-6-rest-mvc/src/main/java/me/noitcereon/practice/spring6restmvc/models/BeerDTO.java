@@ -1,5 +1,8 @@
 package me.noitcereon.practice.spring6restmvc.models;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -55,6 +58,8 @@ public class BeerDTO {
         return this.version;
     }
 
+    @NotNull
+    @NotBlank
     public String getBeerName() {
         return this.beerName;
     }

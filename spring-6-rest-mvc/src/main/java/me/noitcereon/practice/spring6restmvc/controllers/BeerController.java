@@ -4,6 +4,7 @@ import me.noitcereon.practice.spring6restmvc.models.BeerDTO;
 import me.noitcereon.practice.spring6restmvc.services.BeerService;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -34,7 +35,7 @@ public class BeerController {
     }
 
     @PostMapping
-    public ResponseEntity<BeerDTO> createBeer(@RequestBody BeerDTO beerDTO) {
+    public ResponseEntity<BeerDTO> createBeer(@Validated @RequestBody BeerDTO beerDTO) {
         BeerDTO savedBeerDTO = beerService.saveNewBeer(beerDTO);
         return ResponseEntity
                 .created(URI.create("/api/v1/beer/" + savedBeerDTO.getId()))

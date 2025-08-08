@@ -29,142 +29,182 @@ import java.util.UUID;
 
 import static org.hamcrest.Matchers.is;
 
-@WebMvcTest(BeerController.class) // A Spring "Test Slice" to minimize test setup. See also: https://docs.spring.io/spring-boot/appendix/test-auto-configuration/slices.html
+@WebMvcTest(
+    BeerController
+        .class) // A Spring "Test Slice" to minimize test setup. See also:
+                // https://docs.spring.io/spring-boot/appendix/test-auto-configuration/slices.html
 class BeerControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
+  @Autowired MockMvc mockMvc;
 
-    @MockitoBean
-    BeerService mockBeerService;
+  @MockitoBean BeerService mockBeerService;
 
-    ObjectMapper objectMapper;
+  ObjectMapper objectMapper;
 
-    private BeerServiceMapDataImpl beerServiceMapDataImpl;
+  private BeerServiceMapDataImpl beerServiceMapDataImpl;
 
-    @BeforeEach
-    void setUp() {
-        beerServiceMapDataImpl = new BeerServiceMapDataImpl();
+  @BeforeEach
+  void setUp() {
+    beerServiceMapDataImpl = new BeerServiceMapDataImpl();
 
-        /*
-         * JavaTimeModule is a class that registers capability of serializing java.time objects
-         * with the Jackson core.
-         */
-        objectMapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
-    }
+    /*
+     * JavaTimeModule is a class that registers capability of serializing java.time objects
+     * with the Jackson core.
+     */
+    objectMapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
+  }
 
-    @Test
-    void givenBeerService_whenCallingCreateBeerEndpoint_thenCreatedResponseIsReturned() throws Exception {
-        BeerDTO newBeerDTO = beerServiceMapDataImpl.listBeers().get(0);
-        newBeerDTO.setId(null);
-        newBeerDTO.setVersion(null);
+  @Test
+  void givenBeerService_whenCallingCreateBeerEndpoint_thenCreatedResponseIsReturned()
+      throws Exception {
+    BeerDTO newBeerDTO = beerServiceMapDataImpl.listBeers().get(0);
+    newBeerDTO.setId(null);
+    newBeerDTO.setVersion(null);
 
-        BDDMockito.given(mockBeerService.saveNewBeer(ArgumentMatchers.any(BeerDTO.class)))
-                .willReturn(beerServiceMapDataImpl.listBeers().get(1));
+    BDDMockito.given(mockBeerService.saveNewBeer(ArgumentMatchers.any(BeerDTO.class)))
+        .willReturn(beerServiceMapDataImpl.listBeers().get(1));
 
-        String endpoint = BeerController.BASE_URL;
-        var performResult = mockMvc.perform(MockMvcRequestBuilders.post(endpoint)
+    String endpoint = BeerController.BASE_URL;
+    var performResult =
+        mockMvc.perform(
+            MockMvcRequestBuilders.post(endpoint)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(newBeerDTO)));
 
-        performResult.andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.header().exists("Location"));
-    }
+    performResult
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(MockMvcResultMatchers.header().exists("Location"));
+  }
 
-    @Test
-    void testUpdateBeer() throws Exception {
-        // Arrange
-        BeerDTO beerDTOToUpdate = beerServiceMapDataImpl.listBeers().get(0);
+  @Test
+  void testUpdateBeer() throws Exception {
+    // Arrange
+    BeerDTO beerDTOToUpdate = beerServiceMapDataImpl.listBeers().get(0);
 
-        BDDMockito.given(mockBeerService.updateBeerById(ArgumentMatchers.any(UUID.class), ArgumentMatchers.any(BeerDTO.class)))
-                .willReturn(Optional.of(beerDTOToUpdate));
-        String endpoint = BeerController.BASE_URL + "/" + beerDTOToUpdate.getId();
+    BDDMockito.given(
+            mockBeerService.updateBeerById(
+                ArgumentMatchers.any(UUID.class), ArgumentMatchers.any(BeerDTO.class)))
+        .willReturn(Optional.of(beerDTOToUpdate));
+    String endpoint = BeerController.BASE_URL + "/" + beerDTOToUpdate.getId();
 
-        // Act
-        ResultActions performResult = mockMvc.perform(MockMvcRequestBuilders.put(endpoint)
+    // Act
+    ResultActions performResult =
+        mockMvc.perform(
+            MockMvcRequestBuilders.put(endpoint)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beerDTOToUpdate)));
 
-        // Assert
-        performResult.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id", is(beerDTOToUpdate.getId().toString())));
-    }
+    // Assert
+    performResult
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id", is(beerDTOToUpdate.getId().toString())));
+  }
 
-    @Test
-    void givenBeerService_whenFetchingBeerList_thenReturnOkResponseWithBeersInJson() throws Exception {
-        // Arrange
-        List<BeerDTO> testBeerDTOS = new ArrayList<>();
-        testBeerDTOS.add(BeerDTO.builder().beerName("Test Beer").id(UUID.randomUUID()).build());
-        testBeerDTOS.add(BeerDTO.builder().beerName("Beer Test").id(UUID.randomUUID()).build());
-        String endpoint = "/api/v1/beer";
-        BDDMockito.given(mockBeerService.listBeers()).willReturn(testBeerDTOS);
+  @Test
+  void givenBeerService_whenFetchingBeerList_thenReturnOkResponseWithBeersInJson()
+      throws Exception {
+    // Arrange
+    List<BeerDTO> testBeerDTOS = new ArrayList<>();
+    testBeerDTOS.add(BeerDTO.builder().beerName("Test Beer").id(UUID.randomUUID()).build());
+    testBeerDTOS.add(BeerDTO.builder().beerName("Beer Test").id(UUID.randomUUID()).build());
+    String endpoint = "/api/v1/beer";
+    BDDMockito.given(mockBeerService.listBeers()).willReturn(testBeerDTOS);
 
-        // Act
-        ResultActions performResult = mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
-                .accept(MediaType.APPLICATION_JSON));
+    // Act
+    ResultActions performResult =
+        mockMvc.perform(MockMvcRequestBuilders.get(endpoint).accept(MediaType.APPLICATION_JSON));
 
-        // Assert
-        performResult.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].beerName", is(testBeerDTOS.get(0).getBeerName())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", is(testBeerDTOS.get(0).getId().toString())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].beerName", is(testBeerDTOS.get(1).getBeerName())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id", is(testBeerDTOS.get(1).getId().toString())));
-    }
+    // Assert
+    performResult
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("$[0].beerName", is(testBeerDTOS.get(0).getBeerName())))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("$[0].id", is(testBeerDTOS.get(0).getId().toString())))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("$[1].beerName", is(testBeerDTOS.get(1).getBeerName())))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("$[1].id", is(testBeerDTOS.get(1).getId().toString())));
+  }
 
-    @Test
-    void fetchingBeerByIdShouldReturnOkResponseWithBeerJson() throws Exception {
-        // Arrange
-        BeerDTO testBeerDTO = BeerDTO.builder().beerName("Test Beer").id(UUID.randomUUID()).build();
-        String endpoint = "/api/v1/beer/" + testBeerDTO.getId();
-        BDDMockito.given(mockBeerService.getBeerById(testBeerDTO.getId()))
-                .willReturn(Optional.of(testBeerDTO));
+  @Test
+  void fetchingBeerByIdShouldReturnOkResponseWithBeerJson() throws Exception {
+    // Arrange
+    BeerDTO testBeerDTO = BeerDTO.builder().beerName("Test Beer").id(UUID.randomUUID()).build();
+    String endpoint = "/api/v1/beer/" + testBeerDTO.getId();
+    BDDMockito.given(mockBeerService.getBeerById(testBeerDTO.getId()))
+        .willReturn(Optional.of(testBeerDTO));
 
-        // Act
-        ResultActions performResult = mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
-                .accept(MediaType.APPLICATION_JSON));
+    // Act
+    ResultActions performResult =
+        mockMvc.perform(MockMvcRequestBuilders.get(endpoint).accept(MediaType.APPLICATION_JSON));
 
-        // Assert
-        performResult.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.beerName", is(testBeerDTO.getBeerName())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id", is(testBeerDTO.getId().toString())));
-    }
+    // Assert
+    performResult
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.beerName", is(testBeerDTO.getBeerName())))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id", is(testBeerDTO.getId().toString())));
+  }
 
-    @Test
-    void testDeleteBeerById() throws Exception {
-        // Arrange
-        BeerDTO simulatedExistingBeerDTO = beerServiceMapDataImpl.listBeers().get(0);
-        String endpoint = BeerController.BASE_URL + "/" + simulatedExistingBeerDTO.getId();
-        BDDMockito.given(mockBeerService.deleteBeerById(simulatedExistingBeerDTO.getId()))
-                .willReturn(true);
-        ArgumentCaptor<UUID> argCaptor = ArgumentCaptor.forClass(UUID.class);
+  @Test
+  void testDeleteBeerById() throws Exception {
+    // Arrange
+    BeerDTO simulatedExistingBeerDTO = beerServiceMapDataImpl.listBeers().get(0);
+    String endpoint = BeerController.BASE_URL + "/" + simulatedExistingBeerDTO.getId();
+    BDDMockito.given(mockBeerService.deleteBeerById(simulatedExistingBeerDTO.getId()))
+        .willReturn(true);
+    ArgumentCaptor<UUID> argCaptor = ArgumentCaptor.forClass(UUID.class);
 
-        // Act
-        var performResult = mockMvc.perform(MockMvcRequestBuilders.delete(endpoint));
+    // Act
+    var performResult = mockMvc.perform(MockMvcRequestBuilders.delete(endpoint));
 
-        // Assert
-        /*
-         * Verifies the mock was called and captures the input given to the mocked call.
-         * in the argCaptor object.
-         */
-        BDDMockito.verify(mockBeerService).deleteBeerById(argCaptor.capture());
-        Assertions.assertEquals(simulatedExistingBeerDTO.getId(), argCaptor.getValue());
+    // Assert
+    /*
+     * Verifies the mock was called and captures the input given to the mocked call.
+     * in the argCaptor object.
+     */
+    BDDMockito.verify(mockBeerService).deleteBeerById(argCaptor.capture());
+    Assertions.assertEquals(simulatedExistingBeerDTO.getId(), argCaptor.getValue());
 
-        performResult.andExpect(MockMvcResultMatchers.status().isNoContent());
-    }
+    performResult.andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
 
-    @Test
-    void testFetchByIdNotFoundException() throws Exception {
-        BDDMockito.given(mockBeerService.getBeerById(BDDMockito.any(UUID.class)))
-                .willThrow(NotFoundException.class);
+  @Test
+  void testFetchByIdNotFoundException() throws Exception {
+    BDDMockito.given(mockBeerService.getBeerById(BDDMockito.any(UUID.class)))
+        .willThrow(NotFoundException.class);
 
-        var result = mockMvc.perform(MockMvcRequestBuilders.get(
-                BeerController.BASE_URL + "/" + UUID.randomUUID()));
+    var result =
+        mockMvc.perform(
+            MockMvcRequestBuilders.get(BeerController.BASE_URL + "/" + UUID.randomUUID()));
 
-        result.andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
+    result.andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+    /**
+     * Tests the Java Bean Validation (Example annotations: @Validated and @NotNull, @NotBlank)
+     */
+  @Test
+  void testCreateBeerNullBeerName() throws Exception {
+      BeerDTO beerDTO = BeerDTO.builder().build();
+
+      // Given
+      BDDMockito.given(mockBeerService.saveNewBeer(BDDMockito.any(BeerDTO.class))).willReturn(beerServiceMapDataImpl.listBeers().get(1));
+
+    // When
+    ResultActions result =
+        mockMvc
+            .perform(MockMvcRequestBuilders.post(BeerController.BASE_URL)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(beerDTO)));
+
+    // Then
+      result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
 }
