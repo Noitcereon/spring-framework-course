@@ -92,6 +92,20 @@ class BeerControllerIntegrationTest {
     @Rollback
     @Transactional
     @Test
+    void testSaveNewBeer_returnsBadRequestOnTooLongBeerName() {
+        /* TODO: this should give a bad requeust */
+        BeerDTO beerDtoToCreate = BeerDTO.builder()
+                .beerName("New Beer1234567890123456789012345678901234567890 1234567890")
+                .build();
+
+        ResponseEntity<BeerDTO> response = beerController.createBeer(beerDtoToCreate);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Rollback
+    @Transactional
+    @Test
     void testUpdateBeerSuccess() {
         // Arrange
         BeerDTO beerToChange = beerMapper.beerToBeerDto(beerRepo.findAll().getFirst());
